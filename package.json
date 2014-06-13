@@ -1,0 +1,42 @@
+{
+	"name": "rirc",
+    "description": "An IRC client",
+    "version": "0.0.1",
+    "author": {
+        "name": "Igor Randjelovic",
+        "email": "rigor789@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rigor789/Rirc"
+    },
+    "bugs": {
+        "url": "https://github.com/rigor789/Rirc/issues"
+    },
+    "licenses": [
+        {
+          "type": "GPL",
+          "url": "http://www.gnu.org/licenses/gpl-3.0.html"
+        }
+    ],
+    "dependencies": {
+        "irc": "0.3.7"
+    },
+    "engines": {
+        "node": ">=0.4.0"
+    },
+    "readmeFilename": "README.md",
+    "homepage": "https://github.com/rigor789/Rirc",
+	"main": "index.html",
+	"window": {
+		"show": false,
+		"toolbar": false,
+		"frame": false,
+		"position": "center",
+		"icon": "icon.png",
+		"width": 680,
+		"height": 620,
+		"min_width": 680,
+		"min_height": 620
+	}
+}

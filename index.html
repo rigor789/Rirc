@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rirc - IRC client by rigor789</title>
+    <link rel="stylesheet" href="public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/rirc.css">
+    <link rel="stylesheet" href="public/css/chat.css">
+</head>
+<body>
+<div class="titlebar">
+	<h1><i class="fa fa-weixin"></i> <span style="color: #6b96f8; font-weight: bold;">R</span>irc - IRC client by rigor789</h1>
+	<ul class="buttons">
+		<li><a id="minimize" href="#"><i class="fa fa-minus"></i></a></li>
+		<li><a id="close" href="#"><i class="fa fa-times"></i></a></li>
+	</ul>
+</div>
+
+<div class="menubar">
+    <ul>
+        <li><a href="#">File</a></li>
+        <li><a href="#">Edit</a></li>
+        <li><a href="#">Help</a></li>
+    </ul>
+</div>
+
+<div id="window" class="content">
+	<div class="rirc">
+	    <div id="channels" class="pull-left">
+	        <div class="title">
+	            <h1><i class="fa fa-bars"></i> Channels</h1>
+	        </div>
+            <div class="contentpane">
+                <ul class="channels">
+                    <!--<li><a href="#">#ten.java <span class="label label-info pull-right">15</span></a></li>
+                    <li><a href="#">#test <span class="label label-warning pull-right">5</span></a></li>
+                    <li class="active"><a href="#">#test2</a></li>
+                    <li class="separator"></li>-->
+                </ul>
+            </div>
+	    </div>
+	    <div id="chat" class="pull-left">
+	        <div class="title text-center">
+	            <h1><i class="fa fa-weixin"></i> Chat</h1>
+	        </div>
+            <div id="chatbuffer" class="contentpane">
+                <table id="chatlist" class="chat table table-condensed">
+                    <tbody></tbody>
+                    <!--<tr>
+                        <td class="timestamp">[20:33]</td>
+                        <td class="nickname">someone:</td>
+                        <td class="message">Hey!</td>
+                    </tr>-->
+                </table>
+            </div>
+            <div class="messagebox">
+                <label for="chatbox">
+                    Chat: 
+                </label>
+                <input id="chatbox" type="text" placeholder="Chat here...">
+            </div>
+	    </div>
+	    <div id="userlist" class="pull-right">
+	        <div class="title text-right">
+	            <h1>Users <i class="fa fa-users"></i></h1>
+	        </div>
+            <div class="contentpane">
+                <ul class="userlist">
+                    <!--<li><a href="#">@rigor789</a></li>-->
+                </ul>
+            </div>
+	    </div>
+	</div>
+</div>
+
+<div class="statusbar">
+	<p class="pull-left">Status: <span id="status">Idle</span></p>
+    <p class="pull-right">Connected as: <span id="user">-</span></p>
+</div>
+
+<script type="application/javascript" src="public/js/jquery-1.11.1.min.js"></script>
+<script type="application/javascript" src="public/js/bootstrap.min.js"></script>
+<script type="application/javascript" src="rirc/main.js"></script>
+<script type="application/javascript" src="rirc/winstate.js"></script>
+<script type="application/javascript">
+	require("nw.gui").Window.get().show();
+</script>
+</body>
+</html>
