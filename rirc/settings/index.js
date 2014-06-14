@@ -17,11 +17,12 @@
  */
 
 var fs              = require('fs');            // Filesystem
+var path            = require('path');          // Path
 
 exports.loadSettings = function loadSettings() {
     var settings = {};
     try {
-        settings = JSON.parse(fs.readFileSync("settings.json", 'utf8'));
+        settings = JSON.parse(fs.readFileSync(path.dirname(process.execPath) + path.sep + "settings.json", 'utf8'));
     } catch(err) {
         console.error(err);
         settings = {
@@ -40,7 +41,7 @@ exports.loadSettings = function loadSettings() {
 };
 
 exports.saveSettings = function saveSettings(settings) {
-    fs.writeFile( "settings.json", JSON.stringify( settings ), "utf8", function(err) {
+    fs.writeFile( path.dirname(process.execPath) + path.sep + "settings.json", JSON.stringify( settings ), "utf8", function(err) {
         if (err) throw err;
         console.log('Settings saved!');
     });
