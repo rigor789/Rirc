@@ -41,8 +41,7 @@ global.updateStatus = function(status, duration) {
 /**
  * RircSession represents everything that happens in one channel, aka the chat itself, and the users list.
  */
-function RircSession(nickname, channel) {
-    this.nickname   = nickname;
+function RircSession(channel) {
     this.channel    = channel;
     this.buffer     = [];
     this.users      = [];
@@ -55,6 +54,7 @@ RircSession.prototype.drawSession = function() {
     $("#chatlist tbody").html("");
     $(".userlist").html("");
     var session = this;
+    $("#user").html(rirc.getActiveClient().nickname);
     $.each(this.users, function(nick, perm) {
         $(".userlist").append('<li><a href="#">' + perm + nick + '</a></li>');
     });
@@ -120,7 +120,7 @@ function RircClient(client, nickname, ip) {
     this.ip                 = ip;
     this.sessions           = {};
     this.activeSession      = ip;
-    var serverSession       = new RircSession(nickname, ip);
+    var serverSession       = new RircSession(ip);
     var connecting          = "Connecting to " + ip;
     this.sessions[ip]       = serverSession;
     
@@ -137,6 +137,7 @@ RircClient.prototype.joinChannel = function(channel) {
 }
 
 RircClient.prototype.getSession = function(channel) {
+    channel = channel.toLowerCase();
     var session = null;
     if(channel in this.sessions) {
         session = this.sessions[channel];
@@ -148,7 +149,7 @@ RircClient.prototype.getSession = function(channel) {
 }
 
 RircClient.prototype.addSession = function(channel) {
-    this.sessions[channel] = new RircSession(this.nickname, channel);
+    this.sessions[channel] = new RircSession(channel);
     rirc.rircChannels.reDraw();
     return this.getSession(channel);
 }
@@ -265,9 +266,9 @@ RircChannels.prototype.reDraw = function() {
     $.each(this.rircClients, function(key, rircClient) {
         $.each(rircClient.sessions, function(key, session) {
             if(rirc.getActiveClient().getActiveSession() === session) {
-                $("ul.channels").append('<li><a class="channel active" href="' + session.channel + '">' + session.channel + '</a></li>');
+                $("ul.channels").append('<li><a class="channel active" href="' + rircClient.ip + '|' + session.channel + '">' + session.channel + '</a></li>');
             } else {
-                $("ul.channels").append('<li><a class="channel" href="' + session.channel + '">' + session.channel + '</a></li>');
+                $("ul.channels").append('<li><a class="channel" href="' + rircClient.ip + '|' + session.channel + '">' + session.channel + '</a></li>');
             }
         });
         $("ul.channels").append('<li class="separator"></li>');
@@ -276,7 +277,7 @@ RircChannels.prototype.reDraw = function() {
 
 function Rirc() {
     this.rircChannels = new RircChannels();
-    this.activeClient = 0;
+    this.activeClient = '';
     this.rircClients  = [];
 }
 
@@ -287,25 +288,25 @@ Rirc.prototype.loadNetworks = function() {
         var client      = new irc.Client(network.ip, nickname, {
             channels: network.channels,
         });
-        var rircClient  = new RircClient(client, global.settings.nickname, network.ip);
-        var id = rirc.addClient(rircClient);
-        rirc.setActiveClient(id);
+        var rircClient  = new RircClient(client, nickname, network.ip);
+        rirc.addClient(rircClient);
     });
 }
 
 Rirc.prototype.addClient = function(client) {
-    var id = this.rircClients.length;
-    this.rircClients[id] = client;
+    this.rircClients[client.ip] = client;
+    console.log(this);
+    rirc.setActiveClient(client.ip);
     this.rircChannels.addClient(client);
-    return id;
 }
 
 Rirc.prototype.getActiveClient = function() {
-    return this.rircClients[this.activeClient];
+    return this.rircClients[this.activeClient] || this.rircClients[0];
 }
 
-Rirc.prototype.setActiveClient = function(client) {
-    return this.activeClient = client;
+Rirc.prototype.setActiveClient = function(ip) {
+    this.activeClient = ip;
+    return this.rircClients[this.activeClient];
 }
 
 var rirc = new Rirc();
@@ -321,8 +322,9 @@ window.onblur = function() {
 
 $(function(){
     $(document).on('click', 'a.channel', function() {
-        var channel = $(this).attr('href');
-        var session = rirc.getActiveClient().setActiveSession(channel);
+        var id = $(this).attr('href').split('|');
+        
+        var session = rirc.setActiveClient(id[0]).setActiveSession(id[1]);
         rirc.rircChannels.reDraw();
         session.drawSession();
         return false;
@@ -336,9 +338,9 @@ menu.append(new gui.MenuItem({ type: 'separator' }));
 menu.append(new gui.MenuItem({ label: 'Item C' }));
 
 
-for (var i = 0; i < menu.items.length; ++i) {
-  console.log(menu.items[i]);
-}
+//for (var i = 0; i < menu.items.length; ++i) {
+//  console.log(menu.items[i]);
+//}
 
 window.onload = function() {
 
@@ -456,3 +458,7 @@ window.onload = function() {
 
     global.mainWindow.show();
 }
+
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
+});
