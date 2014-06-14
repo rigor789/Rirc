@@ -24,8 +24,6 @@ global.settings         = settings.loadSettings();
 global.gui              = gui;
 global.mainWindow       = gui.Window.get();
 
-global.currentSession   = 'server'; 
-
 /**
  * Update client status
  */
@@ -57,7 +55,6 @@ RircSession.prototype.drawSession = function() {
     $("#chatlist tbody").html("");
     $(".userlist").html("");
     var session = this;
-    global.currentSession = session.channel;
     $.each(this.users, function(nick, perm) {
         $(".userlist").append('<li><a href="#">' + perm + nick + '</a></li>');
     });
@@ -122,10 +119,10 @@ function RircClient(client, nickname, ip) {
     this.nickname           = nickname;
     this.ip                 = ip;
     this.sessions           = {};
-    this.activeSession      = 'server';
-    var serverSession       = new RircSession(nickname, 'server');
+    this.activeSession      = ip;
+    var serverSession       = new RircSession(nickname, ip);
     var connecting          = "Connecting to " + ip;
-    this.sessions['server'] = serverSession;
+    this.sessions[ip]       = serverSession;
     
     global.updateStatus(connecting);
     serverSession.printLine(connecting);
@@ -184,7 +181,7 @@ RircClient.prototype.addListeners = function() {
 
     client.addListener('error', function(message) {
         console.log('error: ', message);
-        var session = rircClient.getSession('server');
+        var session = rircClient.getSession(rircClient.ip);
         if(!!session)
             session.printLine(JSON.stringify(message));
     });
@@ -206,7 +203,7 @@ RircClient.prototype.addListeners = function() {
     client.addListener('registered', function(message) {
         //{"prefix":"warden.esper.net","server":"warden.esper.net","command":"rpl_welcome","rawCommand":"001","commandType":"reply","args":["rirc","Welcome to the EsperNet Internet Relay Chat Network rirc"]}
         rircClient.nickname = message.args[0];
-        var session = rircClient.getSession('server');
+        var session = rircClient.getSession(rircClient.ip);
         if(!!session) {
             session.printLine('Connected to ' + message.server + ' as ' + rircClient.nickname);
             session.printLine(message.args[1], message.prefix);
@@ -215,7 +212,7 @@ RircClient.prototype.addListeners = function() {
     });
                     
     client.addListener('motd', function(motd) {
-        var session = rircClient.getSession('server');
+        var session = rircClient.getSession(rircClient.ip);
         if(!!session)
             session.printLine(motd);
     });
