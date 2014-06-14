@@ -117,6 +117,10 @@ win.on('restore', function () {
     currWinMode = 'normal';
 });
 
+win.window.addEventListener('keydown', function () {
+    $("#chatbox").focus();
+});
+
 win.window.addEventListener('resize', function () {
     // resize event is fired many times on one resize action,
     // this hack with setTiemout forces it to fire only once
