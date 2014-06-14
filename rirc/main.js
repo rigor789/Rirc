@@ -332,8 +332,26 @@ $(function(){
     });
 });
 
+var menu = new gui.Menu();
+menu.append(new gui.MenuItem({ label: 'Item A' }));
+menu.append(new gui.MenuItem({ label: 'Item B' }));
+menu.append(new gui.MenuItem({ type: 'separator' }));
+menu.append(new gui.MenuItem({ label: 'Item C' }));
+
+
+for (var i = 0; i < menu.items.length; ++i) {
+  console.log(menu.items[i]);
+}
+
 window.onload = function() {
 
+    $("#fileMenu").click(function(event) {
+        event.preventDefault();
+        var y = $(this).offset().top + $(this).outerHeight(true);
+        var x = $(this).offset().left;
+        menu.popup(x, y);
+    });
+    
     $("#minimize").click(function() {
         global.mainWindow.minimize();
     });
@@ -344,11 +362,11 @@ window.onload = function() {
     });
 
     $("a").click(function(event) {
-        event.preventDefault();
+        //event.preventDefault();
     });
     
     $("a").click(function(event) {
-        //console.log(event);
+        console.log(event);
     });
                       
     $("a.link").click(function(event) {
@@ -367,6 +385,77 @@ window.onload = function() {
             $(this).val("");
         }
     });
+    
+    var dragging = [];
+    $('#channels .dragbar').mousedown(function(e) {
+        e.preventDefault();
+        dragging['channels'] = true;
+        var channels = $('#channels');
+        var ghostbar = $('<div>', { id:'ghostbar', css: { height: channels.outerHeight(), top: channels.offset().top, left: channels.offset().left }}).appendTo('body');
+
+        $(document).mousemove(function(e){
+            var left = e.pageX;
+            if(left < parseInt($("#channels").css("min-width"))) {
+               left = parseInt($("#channels").css("min-width"));
+            }
+            ghostbar.css("left",left);
+        });
+    });
+    
+    $('#userlist .dragbar').mousedown(function(e) {
+        e.preventDefault();
+        dragging['userlist'] = true;
+        var userlist = $('#userlist');
+        var ghostbar = $('<div>', { id:'ghostbar', css: { height: userlist.outerHeight(), top: userlist.offset().top, left: userlist.offset().left }}).appendTo('body');
+
+        $(document).mousemove(function(e){
+            var left = e.pageX + 5;
+            var maxwidth = window.innerWidth - parseInt($("#userlist").css("min-width"))
+            if(left > maxwidth) {
+               left = window.innerWidth - parseInt($("#userlist").css("min-width"));
+            }
+            ghostbar.css("left",left);
+        });
+    });
+
+    $(document).mouseup(function(e){
+        if (dragging['channels']) {    
+            
+            var dragWidth = e.pageX+5;
+            var channelsWidth = getPercentage(dragWidth);
+            var userListWidth = getPercentage($("#userlist").width());
+            var chatWidth = 100 - channelsWidth - userlistWidth;
+            
+            $('#channels').css("width", channelsWidth + "%");
+            $('#chat').css("width", chatWidth + "%");
+            $('#userlist').css("width", userlistWidth + "%");
+            $('#ghostbar').remove();
+            $(document).unbind('mousemove');
+            dragging['channels'] = false;
+            
+        } else if(dragging['userlist']) {    
+            
+            var dragWidth = e.pageX+5;
+            var userlistWidth = getPercentage(window.innerWidth - dragWidth);
+            
+            console.log(userlistWidth);
+            
+            var channelsWidth = getPercentage($("#channels").width());
+            var chatWidth = 100 - userlistWidth - channelsWidth;
+            
+            $('#channels').css("width", channelsWidth + "%");
+            $('#chat').css("width", chatWidth + "%");
+            $('#userlist').css("width", userlistWidth + "%");
+            $('#ghostbar').remove();
+            $(document).unbind('mousemove');
+            dragging['userlist'] = false;
+        }
+    });
+    
+    function getPercentage(width) {
+        return width / ( window.innerWidth / 100 );
+    }
+
 
     global.mainWindow.show();
 }
