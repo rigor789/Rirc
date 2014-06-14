@@ -53,10 +53,9 @@ function RircSession(channel) {
 RircSession.prototype.drawSession = function() {
     $("#chatlist tbody").html("");
     $(".userlist").html("");
-    var session = this;
     $("#user").html(rirc.getActiveClient().nickname);
-    $.each(this.users, function(nick, perm) {
-        $(".userlist").append('<li><a href="#">' + perm + nick + '</a></li>');
+    this.users.forEach(function(user) {
+        $(".userlist").append('<li><a href="#">' + user.perm + user.nick + '</a></li>');
     });
     $.each(this.buffer, function(key, line) {
         $("#chatlist tbody").append(line);
@@ -81,7 +80,7 @@ RircSession.prototype.drawLine = function(message, sender) {
     var line = '<tr>' +
                 '<td class="timestamp">' + time + '</td>' +
                 '<td class="nickname text-right">' + RircUtils.escapeInput(sender) + ':</td>' +
-                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' + 
+                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' +
                 '</tr>';
     var client = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
@@ -123,7 +122,7 @@ function RircClient(client, nickname, ip) {
     var serverSession       = new RircSession(ip);
     var connecting          = "Connecting to " + ip;
     this.sessions[ip]       = serverSession;
-    
+
     global.updateStatus(connecting);
     serverSession.printLine(connecting);
     this.addListeners();
@@ -166,14 +165,14 @@ RircClient.prototype.setActiveSession = function(session) {
 RircClient.prototype.addListeners = function() {
     var rircClient = this;
     var client = this.client;
-    
+
     client.addListener('message#', function (from, to, message) {
         console.log('from: ' + from + ' to: ' + to + ' message: ' + message);
         var session = rircClient.getSession(to);
         if(!!session)
             session.printLine(message, from);
     });
-    
+
     client.addListener('pm', function (nick, text, message) {
         var session = rircClient.getSession(nick);
         if(!!session)
@@ -190,17 +189,48 @@ RircClient.prototype.addListeners = function() {
     client.addListener('names', function(channel, nicks) {
         var session     = rircClient.getSession(channel);
         var formatted   = 'Connected users: ';
-        
-        session.users   = nicks;
+
+        session.users   = [];
 
         $.each(nicks, function(nick, perms) {
-            formatted += nick + " ";          
+            formatted += nick + " ";
+            session.users.push({
+                nick: nick,
+                perm: perms
+            });
         });
-        
+
+        session.users.sort(function(a, b) {
+            function getPermLevel(perm) {
+                switch(perm) {
+                    case '@': return 0;
+                    case '+': return 1;
+                    default : return 2;
+                }
+            }
+            var permA = getPermLevel(a.perm);
+            var permB = getPermLevel(b.perm);
+            if(permA > permB) {
+                return 1;
+            }
+            if(permA < permB) {
+                return -1;
+            }
+            var nickA = a.nick.toLowerCase();
+            var nickB = b.nick.toLowerCase();
+            if(nickA > nickB) {
+                return 1;
+            }
+            if(nickA < nickB) {
+                return -1;
+            }
+            return 0;
+        });
+
         if(!!session)
             session.printLine(formatted);
     });
-                    
+
     client.addListener('registered', function(message) {
         //{"prefix":"warden.esper.net","server":"warden.esper.net","command":"rpl_welcome","rawCommand":"001","commandType":"reply","args":["rirc","Welcome to the EsperNet Internet Relay Chat Network rirc"]}
         rircClient.nickname = message.args[0];
@@ -211,7 +241,7 @@ RircClient.prototype.addListeners = function() {
         }
         global.updateStatus("Connected to " + message.server, 3);
     });
-                    
+
     client.addListener('motd', function(motd) {
         var session = rircClient.getSession(rircClient.ip);
         if(!!session)
@@ -222,27 +252,27 @@ RircClient.prototype.addListeners = function() {
         var time = new Date(message.args[3] * 1000);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);     
+            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);
     });
-                    
+
     client.addListener('join', function(channel, nick, message) {
         rircClient.joinChannel(channel);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine(nick + " joined " + channel);     
+            session.printLine(nick + " joined " + channel);
     });
-                    
+
     client.addListener('part', function(channel, nick, reason, message) {
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine(nick + ' left ' + channel + '(' + reason + ')');     
+            session.printLine(nick + ' left ' + channel + '(' + reason + ')');
     });
-                    
+
     client.addListener('quit', function(nick, reason, channels, message) {
         $.each(channels, function(key, channel) {
             var session = rircClient.getSession(channel);
             if(!!session)
-                session.printLine(nick + ' quit ' + channel + ' (' + reason + ')');     
+                session.printLine(nick + ' quit ' + channel + ' (' + reason + ')');
         });
     });
 }
@@ -316,14 +346,14 @@ window.onfocus = function() {
     //global.updateStatus("focus", 1);
 }
 
-window.onblur = function() { 
+window.onblur = function() {
     //global.updateStatus("blur", 1);;
 }
 
 $(function(){
     $(document).on('click', 'a.channel', function() {
         var id = $(this).attr('href').split('|');
-        
+
         var session = rirc.setActiveClient(id[0]).setActiveSession(id[1]);
         rirc.rircChannels.reDraw();
         session.drawSession();
@@ -350,7 +380,7 @@ window.onload = function() {
         var x = $(this).offset().left;
         menu.popup(x, y);
     });
-    
+
     $("#minimize").click(function() {
         global.mainWindow.minimize();
     });
@@ -363,20 +393,20 @@ window.onload = function() {
     $("a").click(function(event) {
         //event.preventDefault();
     });
-    
+
     $("a").click(function(event) {
         console.log(event);
     });
-                      
+
     $("a.link").click(function(event) {
         //$("#window").load($(this).attr("href"));
     });
-                
+
     $("input").keydown(function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             var message = $(this).val();
-            
+
             var client = rirc.getActiveClient();
             var session = client.getActiveSession();
             session.printLine(message, client.nickname);
@@ -384,7 +414,7 @@ window.onload = function() {
             $(this).val("");
         }
     });
-    
+
     var dragging = [];
     $('#channels .dragbar').mousedown(function(e) {
         e.preventDefault();
@@ -400,7 +430,7 @@ window.onload = function() {
             ghostbar.css("left",left);
         });
     });
-    
+
     $('#userlist .dragbar').mousedown(function(e) {
         e.preventDefault();
         dragging['userlist'] = true;
@@ -418,39 +448,39 @@ window.onload = function() {
     });
 
     $(document).mouseup(function(e){
-        
+
 //        function resizePanes(relativeTo) {
 //            switch(relativeTo) {
 //                case 'channels':
-//                    
+//
 //                    break;
 //            }
 //        }
-        
-        if (dragging['channels']) {    
-            
+
+        if (dragging['channels']) {
+
             var dragWidth = e.pageX+5;
             var channelsWidth = getPercentage(dragWidth);
             var userListWidth = getPercentage($("#userlist").width());
             var chatWidth = 100 - channelsWidth - userlistWidth;
-            
+
             $('#channels').css("width", channelsWidth + "%");
             $('#chat').css("width", chatWidth + "%");
             $('#userlist').css("width", userlistWidth + "%");
             $('#ghostbar').remove();
             $(document).unbind('mousemove');
             dragging['channels'] = false;
-            
-        } else if(dragging['userlist']) {    
-            
+
+        } else if(dragging['userlist']) {
+
             var dragWidth = e.pageX+5;
             var userlistWidth = getPercentage(window.innerWidth - dragWidth);
-            
+
             console.log(userlistWidth);
-            
+
             var channelsWidth = getPercentage($("#channels").width());
             var chatWidth = 100 - userlistWidth - channelsWidth;
-            
+
             $('#channels').css("width", channelsWidth + "%");
             $('#chat').css("width", chatWidth + "%");
             $('#userlist').css("width", userlistWidth + "%");
@@ -459,7 +489,7 @@ window.onload = function() {
             dragging['userlist'] = false;
         }
     });
-    
+
     function getPercentage(width) {
         return width / ( window.innerWidth / 100 );
     }
