@@ -13,11 +13,11 @@
 </head>
 <body>
 <div class="titlebar">
-	<h1><i class="fa fa-weixin"></i> <span style="color: #6b96f8; font-weight: bold;">R</span>irc - IRC client by rigor789</h1>
-	<ul class="buttons">
-		<li><a id="minimize" href="#"><i class="fa fa-minus"></i></a></li>
-		<li><a id="close" href="#"><i class="fa fa-times"></i></a></li>
-	</ul>
+    <h1><i class="fa fa-weixin"></i> <span style="color: #6b96f8; font-weight: bold;">R</span>irc - IRC client by rigor789</h1>
+    <ul class="buttons">
+        <li><a id="minimize" href="#"><i class="fa fa-minus"></i></a></li>
+        <li><a id="close" href="#"><i class="fa fa-times"></i></a></li>
+    </ul>
 </div>
 
 <div class="menubar">
@@ -29,11 +29,11 @@
 </div>
 
 <div id="window" class="content">
-	<div class="rirc">
-	    <div id="channels" class="pull-left">
-	        <div class="title">
-	            <h1><i class="fa fa-bars"></i> Channels</h1>
-	        </div>
+    <div class="rirc">
+        <div id="channels" class="pull-left">
+            <div class="title">
+                <h1><i class="fa fa-bars"></i> Channels</h1>
+            </div>
             <div class="contentpane">
                 <ul class="channels">
                     <!--<li><a href="#">#ten.java <span class="label label-info pull-right">15</span></a></li>
@@ -42,11 +42,11 @@
                     <li class="separator"></li>-->
                 </ul>
             </div>
-	    </div>
-	    <div id="chat" class="pull-left">
-	        <div class="title text-center">
-	            <h1><i class="fa fa-weixin"></i> Chat</h1>
-	        </div>
+        </div>
+        <div id="chat" class="pull-left">
+            <div class="title text-center">
+                <h1><i class="fa fa-weixin"></i> Chat</h1>
+            </div>
             <div id="chatbuffer" class="contentpane">
                 <table id="chatlist" class="chat table table-condensed">
                     <tbody></tbody>
@@ -59,26 +59,26 @@
             </div>
             <div class="messagebox">
                 <label for="chatbox">
-                    Chat: 
+                    Chat:
                 </label>
                 <input id="chatbox" type="text" placeholder="Chat here...">
             </div>
-	    </div>
-	    <div id="userlist" class="pull-right">
-	        <div class="title text-right">
-	            <h1>Users <i class="fa fa-users"></i></h1>
-	        </div>
+        </div>
+        <div id="userlist" class="pull-right">
+            <div class="title text-right">
+                <h1>Users <i class="fa fa-users"></i></h1>
+            </div>
             <div class="contentpane">
                 <ul class="userlist">
                     <!--<li><a href="#">@rigor789</a></li>-->
                 </ul>
             </div>
-	    </div>
-	</div>
+        </div>
+    </div>
 </div>
 
 <div class="statusbar">
-	<p class="pull-left">Status: <span id="status">Idle</span></p>
+    <p class="pull-left">Status: <span id="status">Idle</span></p>
     <p class="pull-right">Connected as: <span id="user">-</span></p>
 </div>
 
@@ -87,7 +87,7 @@
 <script type="application/javascript" src="rirc/main.js"></script>
 <script type="application/javascript" src="rirc/winstate.js"></script>
 <script type="application/javascript">
-	require("nw.gui").Window.get().show();
+    require("nw.gui").Window.get().show();
 </script>
 </body>
 </html>

@@ -24,7 +24,7 @@ global.settings         = settings.loadSettings();
 global.gui              = gui;
 global.mainWindow       = gui.Window.get();
 
-global.currentSession   = 'server'; 
+global.currentSession   = 'server';
 
 /**
  * Update client status
@@ -84,7 +84,7 @@ RircSession.prototype.drawLine = function(message, sender) {
     var line = '<tr>' +
                 '<td class="timestamp">' + time + '</td>' +
                 '<td class="nickname text-right">' + RircUtils.escapeInput(sender) + ':</td>' +
-                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' + 
+                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' +
                 '</tr>';
     var client = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
@@ -126,7 +126,7 @@ function RircClient(client, nickname, ip) {
     var serverSession       = new RircSession(nickname, 'server');
     var connecting          = "Connecting to " + ip;
     this.sessions['server'] = serverSession;
-    
+
     global.updateStatus(connecting);
     serverSession.printLine(connecting);
     this.addListeners();
@@ -168,14 +168,14 @@ RircClient.prototype.setActiveSession = function(session) {
 RircClient.prototype.addListeners = function() {
     var rircClient = this;
     var client = this.client;
-    
+
     client.addListener('message#', function (from, to, message) {
         console.log('from: ' + from + ' to: ' + to + ' message: ' + message);
         var session = rircClient.getSession(to);
         if(!!session)
             session.printLine(message, from);
     });
-    
+
     client.addListener('pm', function (nick, text, message) {
         var session = rircClient.getSession(nick);
         if(!!session)
@@ -192,17 +192,17 @@ RircClient.prototype.addListeners = function() {
     client.addListener('names', function(channel, nicks) {
         var session     = rircClient.getSession(channel);
         var formatted   = 'Connected users: ';
-        
+
         session.users   = nicks;
 
         $.each(nicks, function(nick, perms) {
-            formatted += nick + " ";          
+            formatted += nick + " ";
         });
-        
+
         if(!!session)
             session.printLine(formatted);
     });
-                    
+
     client.addListener('registered', function(message) {
         //{"prefix":"warden.esper.net","server":"warden.esper.net","command":"rpl_welcome","rawCommand":"001","commandType":"reply","args":["rirc","Welcome to the EsperNet Internet Relay Chat Network rirc"]}
         rircClient.nickname = message.args[0];
@@ -213,7 +213,7 @@ RircClient.prototype.addListeners = function() {
         }
         global.updateStatus("Connected to " + message.server, 3);
     });
-                    
+
     client.addListener('motd', function(motd) {
         var session = rircClient.getSession('server');
         if(!!session)
@@ -224,27 +224,27 @@ RircClient.prototype.addListeners = function() {
         var time = new Date(message.args[3] * 1000);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);     
+            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);
     });
-                    
+
     client.addListener('join', function(channel, nick, message) {
         rircClient.joinChannel(channel);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine(nick + " joined " + channel);     
+            session.printLine(nick + " joined " + channel);
     });
-                    
+
     client.addListener('part', function(channel, nick, reason, message) {
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine(nick + ' left ' + channel + '(' + reason + ')');     
+            session.printLine(nick + ' left ' + channel + '(' + reason + ')');
     });
-                    
+
     client.addListener('quit', function(nick, reason, channels, message) {
         $.each(channels, function(key, channel) {
             var session = rircClient.getSession(channel);
             if(!!session)
-                session.printLine(nick + ' quit ' + channel + ' (' + reason + ')');     
+                session.printLine(nick + ' quit ' + channel + ' (' + reason + ')');
         });
     });
 }
@@ -318,7 +318,7 @@ window.onfocus = function() {
     //global.updateStatus("focus", 1);
 }
 
-window.onblur = function() { 
+window.onblur = function() {
     //global.updateStatus("blur", 1);;
 }
 
@@ -346,20 +346,20 @@ window.onload = function() {
     $("a").click(function(event) {
         event.preventDefault();
     });
-    
+
     $("a").click(function(event) {
         //console.log(event);
     });
-                      
+
     $("a.link").click(function(event) {
         //$("#window").load($(this).attr("href"));
     });
-                
+
     $("input").keydown(function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             var message = $(this).val();
-            
+
             var client = rirc.getActiveClient();
             var session = client.getActiveSession();
             session.printLine(message, client.nickname);
