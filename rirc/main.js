@@ -418,6 +418,15 @@ window.onload = function() {
     });
 
     $(document).mouseup(function(e){
+        
+//        function resizePanes(relativeTo) {
+//            switch(relativeTo) {
+//                case 'channels':
+//                    
+//                    break;
+//            }
+//        }
+        
         if (dragging['channels']) {    
             
             var dragWidth = e.pageX+5;
