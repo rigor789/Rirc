@@ -1,4 +1,4 @@
-## Rirc - an IRC client by rigor789
+## ![Logo](https://github.com/rigor789/Rirc/raw/master/icon48.png "Rirc - an IRC client by rigor789") Rirc - an IRC client by rigor789
 
 ## Introduction
 
@@ -19,7 +19,7 @@ Rirc is an irc client based on `node.js` and `node-webkit`. It runs as a native 
 
 ## Screenshot
 
-![alt text](https://github.com/rigor789/Rirc/raw/master/screenshot.png "Rirc - an IRC client by rigor789")
+![Screenshot](https://github.com/rigor789/Rirc/raw/master/screenshot.png "Rirc - an IRC client by rigor789")
 
 ## Disclaimer
 
