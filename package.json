@@ -1,5 +1,5 @@
 {
-	"name": "rirc",
+    "name": "rirc",
     "description": "An IRC client",
     "version": "0.0.2",
     "author": {
@@ -15,8 +15,8 @@
     },
     "licenses": [
         {
-          "type": "GPL",
-          "url": "http://www.gnu.org/licenses/gpl-3.0.html"
+            "type": "GPL",
+            "url": "http://www.gnu.org/licenses/gpl-3.0.html"
         }
     ],
     "dependencies": {
@@ -27,16 +27,16 @@
     },
     "readmeFilename": "README.md",
     "homepage": "https://github.com/rigor789/Rirc",
-	"main": "index.html",
-	"window": {
-		"show": false,
-		"toolbar": false,
-		"frame": false,
-		"position": "center",
-		"icon": "icon.png",
-		"width": 680,
-		"height": 620,
-		"min_width": 680,
-		"min_height": 620
-	}
+    "main": "index.html",
+    "window": {
+        "show": false,
+        "toolbar": false,
+        "frame": false,
+        "position": "center",
+        "icon": "icon.png",
+        "width": 680,
+        "height": 620,
+        "min_width": 680,
+        "min_height": 620
+    }
 }

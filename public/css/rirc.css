@@ -22,7 +22,7 @@
 
 .rirc .title {
     height: 30px;
-	background: #666666;
+    background: #666666;
 }
 
 .rirc .title h1 {
@@ -34,7 +34,7 @@
 
 .rirc #channels,
 .rirc #userlist {
-    width: 20%;   
+    width: 20%;
 }
 
 .rirc #chat {
@@ -55,7 +55,7 @@
 }
 
 #chat .contentpane {
-    height: calc(100% - 60px); 
+    height: calc(100% - 60px);
 }
 
 ul.channels {
