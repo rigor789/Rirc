@@ -183,7 +183,11 @@ RircClient.prototype.addListeners = function() {
         var session = rircClient.getSession(to);
         var user    = session.getUser(from);
         if(!!session)
-            session.printLine(message, user.nick, user.color);
+            // User messaging the chan from outside are undefined
+            if(typeof user === 'undefined')
+                session.printLine(message, from);
+            else
+                session.printLine(message, user.nick, user.color);
     });
 
     client.addListener('pm', function (nick, text, message) {
