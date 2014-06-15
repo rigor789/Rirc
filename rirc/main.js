@@ -17,9 +17,9 @@
  */
 var irc                 = require('irc');                   // IRC
 var gui                 = require('nw.gui');                // NodeWebkit GUI
-var settings            = require('./rirc/settings');       // Settings
-var colors              = require('./rirc/colors.js')
-var user                = require('./rirc/user.js')
+var settings            = require('./rirc/settings.js');    // Settings
+var colors              = require('./rirc/colors.js')       // Colors
+var user                = require('./rirc/user.js')         // User
 
 // Load the settings
 global.settings         = settings.loadSettings();
