@@ -12,7 +12,7 @@ exports.Colors = function() {
 exports.Colors.prototype.next = function() {
     this.current++;
     if(this.current == this.colors.length) {
-        this.current = -1;
+        this.current = 0;
     }
     return this.colors[this.current];
 };
