@@ -54,7 +54,7 @@
 }
 
 #chat .contentpane {
-    height: calc(100% - 60px); 
+    height: calc(100% - 60px);
 }
 
 ul.channels {
@@ -149,6 +149,9 @@ ul.userlist li a:hover {
    float: left;
    width: 5px;
    cursor: col-resize;
+}
+#userlist a {
+    color: inherit;
 }
 
 #ghostbar {
