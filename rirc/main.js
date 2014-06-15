@@ -18,6 +18,8 @@
 var irc                 = require('irc');                   // IRC
 var gui                 = require('nw.gui');                // NodeWebkit GUI
 var settings            = require('./rirc/settings');       // Settings
+var colors              = require('./rirc/colors.js')
+var user                = require('./rirc/user.js')
 
 // Load the settings
 global.settings         = settings.loadSettings();
@@ -45,7 +47,7 @@ function RircSession(channel) {
     this.channel    = channel;
     this.buffer     = [];
     this.users      = [];
-    this.colors     = new Colors();
+    this.colors     = new colors.Colors();
 }
 
 /**
@@ -205,7 +207,7 @@ RircClient.prototype.addListeners = function() {
 
         $.each(nicks, function(nick, perm) {
             formatted += nick + " ";
-            session.users.push(new User(nick, perm, session.colors.next()));
+            session.users.push(new user.User(nick, perm, session.colors.next()));
         });
 
         session.users.sort(function(a, b) {

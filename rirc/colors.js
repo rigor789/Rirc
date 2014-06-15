@@ -1,4 +1,4 @@
-function Colors() {
+exports.Colors = function() {
     this.colors  = [
         'black',
         'blue',
@@ -9,7 +9,7 @@ function Colors() {
     this.current = -1;
 }
 
-Colors.prototype.next = function() {
+exports.Colors.prototype.next = function() {
     this.current++;
     if(this.current == this.colors.length) {
         this.current = -1;
