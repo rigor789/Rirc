@@ -360,11 +360,11 @@ $(function(){
     });
 });
 
-var menu = new gui.Menu();
-menu.append(new gui.MenuItem({ label: 'Item A' }));
-menu.append(new gui.MenuItem({ label: 'Item B' }));
-menu.append(new gui.MenuItem({ type: 'separator' }));
-menu.append(new gui.MenuItem({ label: 'Item C' }));
+//var menu = new gui.Menu();
+//menu.append(new gui.MenuItem({ label: 'Item A' }));
+//menu.append(new gui.MenuItem({ label: 'Item B' }));
+//menu.append(new gui.MenuItem({ type: 'separator' }));
+//menu.append(new gui.MenuItem({ label: 'Item C' }));
 
 
 //for (var i = 0; i < menu.items.length; ++i) {
