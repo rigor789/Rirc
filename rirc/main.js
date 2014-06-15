@@ -125,7 +125,7 @@ RircUtils.escapeInput = function(data) {
 };
 
 RircUtils.parseUrls = function(data) {
-    var expression = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+    var expression = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
     data = data.replace(expression, '<a href="$1" class="link" >$1</a>');
     return data;
 }
