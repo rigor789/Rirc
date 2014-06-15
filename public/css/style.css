@@ -90,7 +90,7 @@ body {
 .menubar ul {
     list-style: none;
     padding: 0;
-    margin-left: 10px;
+    margin: 0 10px;
 }
 
 .menubar ul li {
