@@ -77,14 +77,16 @@ RircSession.prototype.printLine = function(message, sender, color) {
 /**
  * drawLine will display a line, but not add it to the buffer
  */
-RircSession.prototype.drawLine = function(message, sender, color) {
+RircSession.prototype.drawLine = function(message, sender, color) {  
     sender = typeof sender !== 'undefined' ? sender : "*";
+    message = RircUtils.escapeInput(message);
+    message = RircUtils.parseUrls(message);
     var color = typeof color  !== 'undefined' ? color: "initial";
     var time = RircUtils.getTimestamp();
     var line = '<tr>' +
                 '<td class="timestamp">' + time + '</td>' +
                 '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
-                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' +
+                '<td class="message"><pre>' + message + '</pre></td>' +
                 '</tr>';
     var client = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
@@ -121,6 +123,12 @@ RircUtils.escapeInput = function(data) {
         return '';
     }
 };
+
+RircUtils.parseUrls = function(data) {
+    var expression = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+    data = data.replace(expression, '<a href="$1" class="link" >$1</a>');
+    return data;
+}
 
 /**
  * RircClient class
@@ -372,6 +380,11 @@ $(function(){
         session.drawSession();
         return false;
     });
+    
+    $(document).on('click', 'a.link', function() {
+        global.gui.Shell.openExternal($(this).attr("href"));
+        return false;
+    });
 });
 
 //var menu = new gui.Menu();
@@ -404,15 +417,7 @@ window.onload = function() {
     });
 
     $("a").click(function(event) {
-        //event.preventDefault();
-    });
-
-    $("a").click(function(event) {
-        //console.log(event);
-    });
-
-    $("a.link").click(function(event) {
-        //$("#window").load($(this).attr("href"));
+        event.preventDefault();
     });
 
     $("input").keydown(function(event) {
