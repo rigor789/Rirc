@@ -325,7 +325,6 @@ Rirc.prototype.loadNetworks = function() {
 
 Rirc.prototype.addClient = function(client) {
     this.rircClients[client.ip] = client;
-    console.log(this);
     rirc.setActiveClient(client.ip);
     this.rircChannels.addClient(client);
 }
@@ -395,7 +394,7 @@ window.onload = function() {
     });
 
     $("a").click(function(event) {
-        console.log(event);
+        //console.log(event);
     });
 
     $("a.link").click(function(event) {
@@ -447,15 +446,14 @@ window.onload = function() {
         });
     });
 
-    $(document).mouseup(function(e){
-        var posX = $("#ghostbar").offset().left;
+    $(document).mouseup(function(e){        
         if (dragging['channels']) {
-            resizePanes('channels', posX);
+            resizePanes('channels', $("#ghostbar").offset().left);
             $('#ghostbar').remove();
             $(document).unbind('mousemove');
             dragging['channels'] = false;
         } else if(dragging['userlist']) {
-            resizePanes('userlist', window.innerWidth - posX);
+            resizePanes('userlist', window.innerWidth - $("#ghostbar").offset().left);
             $('#ghostbar').remove();
             $(document).unbind('mousemove');
             dragging['userlist'] = false;
@@ -482,8 +480,7 @@ window.onload = function() {
     function getPercentage(width) {
         return width / ( window.innerWidth / 100 );
     }
-
-
+    
     global.mainWindow.show();
 }
 
