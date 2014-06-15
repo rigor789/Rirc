@@ -419,7 +419,7 @@ window.onload = function() {
     $('#channels .dragbar').mousedown(function(e) {
         e.preventDefault();
         dragging['channels'] = true;
-        var channels = $('#channels');
+        var channels = $('#channels .dragbar');
         var ghostbar = $('<div>', { id:'ghostbar', css: { height: channels.outerHeight(), top: channels.offset().top, left: channels.offset().left }}).appendTo('body');
 
         $(document).mousemove(function(e){
@@ -434,7 +434,7 @@ window.onload = function() {
     $('#userlist .dragbar').mousedown(function(e) {
         e.preventDefault();
         dragging['userlist'] = true;
-        var userlist = $('#userlist');
+        var userlist = $('#userlist .dragbar');
         var ghostbar = $('<div>', { id:'ghostbar', css: { height: userlist.outerHeight(), top: userlist.offset().top, left: userlist.offset().left }}).appendTo('body');
 
         $(document).mousemove(function(e){
@@ -448,48 +448,37 @@ window.onload = function() {
     });
 
     $(document).mouseup(function(e){
-
-//        function resizePanes(relativeTo) {
-//            switch(relativeTo) {
-//                case 'channels':
-//
-//                    break;
-//            }
-//        }
-
+        var posX = $("#ghostbar").offset().left;
         if (dragging['channels']) {
-
-            var dragWidth = e.pageX+5;
-            var channelsWidth = getPercentage(dragWidth);
-            var userListWidth = getPercentage($("#userlist").width());
-            var chatWidth = 100 - channelsWidth - userlistWidth;
-
-            $('#channels').css("width", channelsWidth + "%");
-            $('#chat').css("width", chatWidth + "%");
-            $('#userlist').css("width", userlistWidth + "%");
+            resizePanes('channels', posX);
             $('#ghostbar').remove();
             $(document).unbind('mousemove');
             dragging['channels'] = false;
-
         } else if(dragging['userlist']) {
-
-            var dragWidth = e.pageX+5;
-            var userlistWidth = getPercentage(window.innerWidth - dragWidth);
-
-            console.log(userlistWidth);
-
-            var channelsWidth = getPercentage($("#channels").width());
-            var chatWidth = 100 - userlistWidth - channelsWidth;
-
-            $('#channels').css("width", channelsWidth + "%");
-            $('#chat').css("width", chatWidth + "%");
-            $('#userlist').css("width", userlistWidth + "%");
+            resizePanes('userlist', window.innerWidth - posX);
             $('#ghostbar').remove();
             $(document).unbind('mousemove');
             dragging['userlist'] = false;
         }
     });
 
+    function resizePanes(relativeTo, newWidth) {
+        newWidth = getPercentage(newWidth);
+        var totalWidth;
+        switch(relativeTo) {
+            case 'channels':
+                $('#channels').css("width", newWidth + "%");
+                totalWidth = newWidth + getPercentage($("#userlist").width());
+                break;
+            case 'userlist':
+                $('#userlist').css("width", newWidth + "%");
+                totalWidth = newWidth + getPercentage($("#channels").width());
+                break;
+        }
+        var chatWidth = 100 - totalWidth;
+        $('#chat').css("width", chatWidth + "%");
+    }
+    
     function getPercentage(width) {
         return width / ( window.innerWidth / 100 );
     }
