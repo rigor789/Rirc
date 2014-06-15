@@ -45,6 +45,7 @@ function RircSession(channel) {
     this.channel    = channel;
     this.buffer     = [];
     this.users      = [];
+    this.colors     = new Colors();
 }
 
 /**
@@ -55,7 +56,7 @@ RircSession.prototype.drawSession = function() {
     $(".userlist").html("");
     $("#user").html(rirc.getActiveClient().nickname);
     this.users.forEach(function(user) {
-        $(".userlist").append('<li><a href="#">' + user.perm + user.nick + '</a></li>');
+        $(".userlist").append('<li style="color: ' + user.color + ';"><a href="#">' + user.permission + user.nick + '</a></li>');
     });
     $.each(this.buffer, function(key, line) {
         $("#chatlist tbody").append(line);
@@ -66,20 +67,21 @@ RircSession.prototype.drawSession = function() {
 /**
  * printLine will print a line to the session
  */
-RircSession.prototype.printLine = function(message, sender) {
-    var line = this.drawLine(message, sender);
+RircSession.prototype.printLine = function(message, sender, color) {
+    var line = this.drawLine(message, sender, color);
     this.buffer[this.buffer.length] = line;
 };
 
 /**
  * drawLine will display a line, but not add it to the buffer
  */
-RircSession.prototype.drawLine = function(message, sender) {
+RircSession.prototype.drawLine = function(message, sender, color) {
     sender = typeof sender !== 'undefined' ? sender : "*";
+    var color = typeof color  !== 'undefined' ? color: "initial";
     var time = RircUtils.getTimestamp();
     var line = '<tr>' +
                 '<td class="timestamp">' + time + '</td>' +
-                '<td class="nickname text-right">' + RircUtils.escapeInput(sender) + ':</td>' +
+                '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
                 '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' +
                 '</tr>';
     var client = rirc.getActiveClient();
@@ -90,6 +92,14 @@ RircSession.prototype.drawLine = function(message, sender) {
     }
     return line;
 }
+
+RircSession.prototype.getUser = function(username) {
+    for (var i = 0; i < this.users.length; i++) {
+        if(this.users[i].nick == username) {
+            return this.users[i];
+        }
+    }
+};
 
 /**
  * RircUtils class
@@ -169,8 +179,9 @@ RircClient.prototype.addListeners = function() {
     client.addListener('message#', function (from, to, message) {
         console.log('from: ' + from + ' to: ' + to + ' message: ' + message);
         var session = rircClient.getSession(to);
+        var user    = session.getUser(from);
         if(!!session)
-            session.printLine(message, from);
+            session.printLine(message, user.nick, user.color);
     });
 
     client.addListener('pm', function (nick, text, message) {
@@ -192,12 +203,9 @@ RircClient.prototype.addListeners = function() {
 
         session.users   = [];
 
-        $.each(nicks, function(nick, perms) {
+        $.each(nicks, function(nick, perm) {
             formatted += nick + " ";
-            session.users.push({
-                nick: nick,
-                perm: perms
-            });
+            session.users.push(new User(nick, perm, session.colors.next()));
         });
 
         session.users.sort(function(a, b) {
@@ -208,8 +216,8 @@ RircClient.prototype.addListeners = function() {
                     default : return 2;
                 }
             }
-            var permA = getPermLevel(a.perm);
-            var permB = getPermLevel(b.perm);
+            var permA = getPermLevel(a.permission);
+            var permB = getPermLevel(b.permission);
             if(permA > permB) {
                 return 1;
             }
@@ -409,7 +417,7 @@ window.onload = function() {
             var client = rirc.getActiveClient();
             var session = client.getActiveSession();
             session.printLine(message, client.nickname);
-            client.client.say(session.channel, message );
+            client.client.say(session.channel, message);
             $(this).val("");
         }
     });
@@ -446,7 +454,7 @@ window.onload = function() {
         });
     });
 
-    $(document).mouseup(function(e){        
+    $(document).mouseup(function(e){
         if (dragging['channels']) {
             resizePanes('channels', $("#ghostbar").offset().left);
             $('#ghostbar').remove();
@@ -476,11 +484,11 @@ window.onload = function() {
         var chatWidth = 100 - totalWidth;
         $('#chat').css("width", chatWidth + "%");
     }
-    
+
     function getPercentage(width) {
         return width / ( window.innerWidth / 100 );
     }
-    
+
     global.mainWindow.show();
 }
 
