@@ -20,6 +20,7 @@ var gui                 = require('nw.gui');                // NodeWebkit GUI
 var settings            = require('./rirc/settings.js');    // Settings
 var colors              = require('./rirc/colors.js')       // Colors
 var user                = require('./rirc/user.js')         // User
+var color_parser        = require('./rirc/colorparser.js')  // Color Parser
 
 // Load the settings
 global.settings         = settings.loadSettings();
@@ -38,7 +39,7 @@ global.updateStatus = function(status, duration) {
         function() {
             $("#status").html('Idle');
         }, duration * 1000);
-};
+}
 
 /**
  * RircSession represents everything that happens in one channel, aka the chat itself, and the users list.
@@ -64,7 +65,7 @@ RircSession.prototype.drawSession = function() {
         $("#chatlist tbody").append(line);
         $("#chatbuffer").scrollTop($("#chatlist")[0].scrollHeight);
     });
-};
+}
 
 /**
  * printLine will print a line to the session
@@ -72,15 +73,16 @@ RircSession.prototype.drawSession = function() {
 RircSession.prototype.printLine = function(message, sender, color) {
     var line = this.drawLine(message, sender, color);
     this.buffer[this.buffer.length] = line;
-};
+}
 
 /**
  * drawLine will display a line, but not add it to the buffer
  */
-RircSession.prototype.drawLine = function(message, sender, color) {  
+RircSession.prototype.drawLine = function(message, sender, color) {
     sender = typeof sender !== 'undefined' ? sender : "*";
     message = RircUtils.escapeInput(message);
     message = RircUtils.parseUrls(message);
+    message = RircUtils.parseColors(message);
     var color = typeof color  !== 'undefined' ? color: "initial";
     var time = RircUtils.getTimestamp();
     var line = '<tr>' +
@@ -103,7 +105,7 @@ RircSession.prototype.getUser = function(username) {
             return this.users[i];
         }
     }
-};
+}
 
 /**
  * RircUtils class
@@ -122,12 +124,16 @@ RircUtils.escapeInput = function(data) {
     } else {
         return '';
     }
-};
+}
 
 RircUtils.parseUrls = function(data) {
-    var expression = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+    var expression = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     data = data.replace(expression, '<a href="$1" class="link" >$1</a>');
     return data;
+}
+
+RircUtils.parseColors = function(data) {
+    return color_parser.parse(data);
 }
 
 /**
@@ -380,7 +386,7 @@ $(function(){
         session.drawSession();
         return false;
     });
-    
+
     $(document).on('click', 'a.link', function() {
         global.gui.Shell.openExternal($(this).attr("href"));
         return false;
