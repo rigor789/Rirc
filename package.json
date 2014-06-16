@@ -30,7 +30,7 @@
     "main": "index.html",
     "window": {
         "show": false,
-        "toolbar": false,
+        "toolbar": true,
         "frame": false,
         "position": "center",
         "icon": "icon.png",

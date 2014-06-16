@@ -6,6 +6,7 @@ function ColorParser() {
     this.incremental_regex = new RegExp('(\x03(1[0-5]|0?[0-9])|\x0f|\x1d|\x02|\x1f)');
     this.open_tag          = '<span style="%s;">';
     this.close_tag         = '</span>';
+    // TODO Load these from the settings
     this.colors            = [
         //'white',      'black',
         //'dark_blue',  'dark_green',
@@ -15,7 +16,7 @@ function ColorParser() {
         //'cyan',       'light_cyan',
         //'light_blue', 'light_magenta',
         //'gray',       'light_gray'
-        '#e6e6e6',    '#111',
+        '#e6e6e6', '#111',
         '#000089', '#006700',
         '#ff6767', '#990000',
         '#c0c',    '#ffa500',
