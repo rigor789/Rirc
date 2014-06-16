@@ -9,13 +9,14 @@ Rirc is an irc client based on `node.js` and `node-webkit`. It runs as a native 
 * A clean GUI
 * Connection to an IRC server
 * Recieving messages
+* Support for multiple networks / channels
 
 ## Todo
 
-* Implement settings
 * Add event listeners
 * Add color schemes
 * Implement IRC features
+* Much much more
 
 ## Screenshot
 
@@ -28,6 +29,10 @@ This application is in it's very early stages; it is far from being ready for us
 ## Contributing
 
 If you wish to contribute to the project, fork this repository, and submit Pull Requests!
+
+## Connect with us
+
+Come join us on IRC! irc.esper.net #rirc :)
 
 ## Dependencies
 
