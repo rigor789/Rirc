@@ -1,7 +1,26 @@
 /**
+ * Rirc - IRC client by rigor789
+ * Copyright (C) 2014  Igor Randjelovic <rigor789>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * author: bendem
+ * 
  * This file was inspired by mbaxter's work
  * on the bukkit chat color handling system
  */
+
 function ColorParser() {
     this.incremental_regex = new RegExp('(\x03(1[0-5]|0?[0-9])|\x0f|\x1d|\x02|\x1f)');
     this.open_tag          = '<span style="%s;">';
