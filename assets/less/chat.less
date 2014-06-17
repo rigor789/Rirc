@@ -33,32 +33,40 @@
     }
     .message {
         width: 80%;
+        font-size: 16px;
         pre {
-            color: @font-color;
             margin: 0;
-            font-size: 16px;
             word-break: break-all;
             word-wrap: break-word;
-            .irc-white         { color: @irc-white; }
-            .irc-black         { color: @irc-black; }
-            .irc-dark-blue     { color: @irc-dark-blue; }
-            .irc-dark-green    { color: @irc-dark-green; }
-            .irc-dark-red      { color: @irc-dark-red; }
-            .irc-magenta       { color: @irc-magenta; }
-            .irc-orange        { color: @irc-orange; }
-            .irc-yellow        { color: @irc-yellow; }
-            .irc-cyan          { color: @irc-cyan; }
-            .irc-light-red     { color: @irc-light-red; }
-            .irc-light-green   { color: @irc-light-green; }
-            .irc-light-cyan    { color: @irc-light-cyan; }
-            .irc-light-blue    { color: @irc-light-blue; }
-            .irc-light-magenta { color: @irc-light-magenta; }
-            .irc-gray          { color: @irc-gray; }
-            .irc-light-gray    { color: @irc-light-gray; }
-            .irc-bold          { font-weight: bold; }
-            .irc-italic        { font-style: italic; }
-            .irc-underline     { text-decoration: underline; }
         }
     }
-
+    thead>tr>th,
+    tbody>tr>th,
+    tfoot>tr>th,
+    thead>tr>td,
+    tbody>tr>td,
+    tfoot>tr>td {
+        border-top: none;    
+    }
 }
+
+.message           { color: @font-color; }
+.irc-white         { color: @irc-white; }
+.irc-black         { color: @irc-black; }
+.irc-dark-blue     { color: @irc-dark-blue; }
+.irc-dark-green    { color: @irc-dark-green; }
+.irc-dark-red      { color: @irc-dark-red; }
+.irc-magenta       { color: @irc-magenta; }
+.irc-orange        { color: @irc-orange; }
+.irc-yellow        { color: @irc-yellow; }
+.irc-cyan          { color: @irc-cyan; }
+.irc-light-red     { color: @irc-light-red; }
+.irc-light-green   { color: @irc-light-green; }
+.irc-light-cyan    { color: @irc-light-cyan; }
+.irc-light-blue    { color: @irc-light-blue; }
+.irc-light-magenta { color: @irc-light-magenta; }
+.irc-gray          { color: @irc-gray; }
+.irc-light-gray    { color: @irc-light-gray; }
+.irc-bold          { font-weight: bold; }
+.irc-italic        { font-style: italic; }
+.irc-underline     { text-decoration: underline; }

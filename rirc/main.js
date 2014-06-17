@@ -24,16 +24,22 @@ var gui                 = require('nw.gui'),
 global.gui              = gui;
 global.jQuery           = jQuery;
 global.mainWindow       = gui.Window.get();
+global.document         = global.mainWindow.window.document;
 global.settings         = settings.loadSettings();
 
 var clientWindow        = require('./rirc/client.js'),
     color_parser        = require('./rirc/colorparser.js'),
     colors              = require('./rirc/colors.js'),
+    theme               = require('./rirc/theme.js'),
     user                = require('./rirc/user.js');
 
 process.on('uncaughtException', function(err) {
     console.log('Caught exception: ' + err);
 });
+
+if(!!global.settings.theme) {
+    new theme.Theme(global.settings.theme).load();
+}
 
 /**
  * RircSession represents everything that happens in one channel, aka the chat itself, and the users list.

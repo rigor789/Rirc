@@ -19,21 +19,21 @@
 'use strict';
 var fs              = require('fs'),
     path            = require('path'),
-    colorschemes    = path.dirname(process.execPath) + path.sep + "themes" + path.sep,
+    themesdir       = path.dirname(process.execPath) + path.sep + "themes" + path.sep,
     $               = global.jQuery;
-    document        = global.mainWindow.window.document;
+    document        = global.document;
 
 function Theme(name) {
     this.name = name;
-    this.path = colorschemes + name + '.css';
+    this.path = themesdir + name + '.css';
 }
 
 Theme.prototype.load = function() {
     var link = $('<link>');
     link.attr('rel', 'stylesheet');
     link.attr('type', 'text/css');
-    link.attr('href', this.path);
-    link.appendTo($('<head>'));
+    link.attr('href', 'file:///' + this.path);
+    link.appendTo($('head'));
 }
 
 Theme.list = function() {

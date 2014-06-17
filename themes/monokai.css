@@ -1,0 +1,27 @@
+.background-chat,
+.background-channels,
+.background-users
+                    { background: #1c1c1c; }
+.timestamp          { color: ; }
+.message            { color: #666; }
+.link               { color: #00afaf; border-bottom: dotted 1px; text-decoration: none; }
+.link:hover         { color: #006DCC; border-color: #00afaf; text-decoration: none; }
+.irc-white          { color: #ffffff; }
+.irc-black          { color: #000000; }
+.irc-dark-blue      { color: #000088; }
+.irc-dark-green     { color: #008800; }
+.irc-dark-red       { color: #ff0000; }
+.irc-magenta        { color: #880000; }
+.irc-orange         { color: #880088; }
+.irc-yellow         { color: #ff8800; }
+.irc-cyan           { color: #ffff00; }
+.irc-light-red      { color: #00ff00; }
+.irc-light-green    { color: #008888; }
+.irc-light-cyan     { color: #00ffff; }
+.irc-light-blue     { color: #0000ff; }
+.irc-light-magenta  { color: #ff00ff; }
+.irc-gray           { color: #888888; }
+.irc-light-gray     { color: #cccccc; }
+.irc-bold           { font-weight: bold; }
+.irc-italic         { font-style: italic; }
+.irc-underline      { text-decoration: underline; }
