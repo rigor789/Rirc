@@ -14,9 +14,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * author: bendem
- * 
+ *
  * This file was inspired by mbaxter's work
  * on the bukkit chat color handling system
  */
@@ -24,26 +24,17 @@
 'use strict';
 function ColorParser() {
     this.incremental_regex = new RegExp('(\x03(1[0-5]|0?[0-9])|\x0f|\x1d|\x02|\x1f)');
-    this.open_tag          = '<span style="%s;">';
+    this.open_tag          = '<span class="irc-%s">';
     this.close_tag         = '</span>';
-    // TODO Load these from the settings
     this.colors            = [
-        //'white',      'black',
-        //'dark_blue',  'dark_green',
-        //'light_red',  'dark_red',
-        //'magenta',    'orange',
-        //'yellow',     'light_green',
-        //'cyan',       'light_cyan',
-        //'light_blue', 'light_magenta',
-        //'gray',       'light_gray'
-        '#e6e6e6', '#111',
-        '#000089', '#006700',
-        '#ff6767', '#990000',
-        '#c0c',    '#ffa500',
-        'ffea00',  '#27e700',
-        '#008080', '#00b3b3',
-        '#3b3bff', '#ff80ff',
-        'gray',    'light_gray'
+        'white',      'black',
+        'dark-blue',  'dark-green',
+        'light-red',  'dark-red',
+        'magenta',    'orange',
+        'yellow',     'light-green',
+        'cyan',       'light-cyan',
+        'light-blue', 'light-magenta',
+        'gray',       'light-gray'
     ];
 }
 
@@ -55,8 +46,8 @@ ColorParser.prototype.isColorCode = function(data) {
     return data.match(/^\x03(?:1[0-5]|0?[0-9])$/) != null;
 }
 
-ColorParser.prototype.openTag = function(prop, value) {
-    return this.open_tag.replace('%s', prop + ':' + value);
+ColorParser.prototype.openTag = function(clazz) {
+    return this.open_tag.replace('%s', clazz);
 }
 
 ColorParser.prototype.strip = function(data) {
@@ -79,7 +70,7 @@ ColorParser.prototype.parse = function(data) {
             if(color) {
                 ++closing_tags;
             }
-            tag = this.openTag('color', this.getColorFromCode(res[2]));
+            tag = this.openTag(this.getColorFromCode(res[2]));
             color = true;
         } else {
             switch(res[1]) {
@@ -105,21 +96,21 @@ ColorParser.prototype.parse = function(data) {
                 // italic
                 case '\x1d':
                     if(!italic) {
-                        tag = this.openTag('font-style', 'italic');
+                        tag = this.openTag('italic');
                         italic = true;
                     }
                     break;
                 // bold
                 case '\x02':
                     if(!bold) {
-                        tag = this.openTag('font-weight', 'bold');
+                        tag = this.openTag('bold');
                         bold = true;
                     }
                     break;
                 // underline
                 case '\x1f':
                     if(!underline) {
-                        tag = this.openTag('text-decoration', 'underline');
+                        tag = this.openTag('underline');
                         underline = true;
                     }
                     break;

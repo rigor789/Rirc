@@ -81,7 +81,7 @@ RircSession.prototype.drawLine = function(message, sender, color) {
     var time    = RircUtils.getTimestamp();
     var line    = '<tr>' +
                   '<td class="timestamp">' + time + '</td>' +
-                  '<td class="nickname text-right"><span class="nickname" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + '</span></td>' +
+                  '<td class="nickname text-right"><span style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + '</span></td>' +
                   '<td class="message"><pre>' + message + '</pre></td>' +
                   '</tr>';
     var client  = rirc.getActiveClient();
@@ -366,7 +366,7 @@ var rirc = new Rirc();
 rirc.loadNetworks();
 
 $(document).ready(function() {
-    
+
     $(document).on('click', 'a.channel', function() {
         var id = $(this).attr('href').split('|');
 
@@ -380,7 +380,7 @@ $(document).ready(function() {
         global.gui.Shell.openExternal($(this).attr("href"));
         return false;
     });
-    
+
     $("#fileMenu").click(function(event) {
         event.preventDefault();
         var y = $(this).offset().top + $(this).outerHeight(true);
@@ -413,12 +413,12 @@ $(document).ready(function() {
             $(this).val("");
         }
     });
-    
+
     $(document).keypress(function(event) {
         if(event.ctrlKey) return;
         $("#chatbox").focus();
     });
-    
+
     $(".rirc").layout({
         applyDefaultStyles: false,
         resizerClass: "dragbar",
