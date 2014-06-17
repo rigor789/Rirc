@@ -1,15 +1,27 @@
+/**
+ * Rirc - IRC client by rigor789
+ * Copyright (C) 2014  Igor Randjelovic <rigor789>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #chatlist td pre {
-    display: block;
-    padding: 0;
     margin: 0;
     font-size: 16px;
-    line-height: 1.42857143;
     word-break: break-all;
     word-wrap: break-word;
     color: #333;
-    background-color: transparent;
-    border: none;
-    border-radius: 0;
 }
 
 #chatlist {
@@ -19,18 +31,27 @@
 }
 
 #chatlist td.timestamp {
-    width: 5%;
-    color: green;
+    max-width: 70px;
+    width: auto;
+    overflow: hidden;
 }
 
 #chatlist td.nickname {
-    width: 15%;
-    color: blue;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    border-right: 1px solid #333;
 }
 
 #chatlist td.message {
     width: 80%;
+}
+
+#chatlist .timestamp {
+    color: green;
+}
+
+#chatlist .nickname {
+    color: blue;
+}
+
+#chatlist .message {
     color: gray;
 }

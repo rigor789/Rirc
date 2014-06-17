@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 'use strict';
 var gui                 = require('nw.gui'),
     irc                 = require('irc'),
@@ -80,7 +81,7 @@ RircSession.prototype.drawLine = function(message, sender, color) {
     var time    = RircUtils.getTimestamp();
     var line    = '<tr>' +
                   '<td class="timestamp">' + time + '</td>' +
-                  '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
+                  '<td class="nickname text-right"><span class="nickname" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + '</span></td>' +
                   '<td class="message"><pre>' + message + '</pre></td>' +
                   '</tr>';
     var client  = rirc.getActiveClient();
@@ -337,6 +338,8 @@ Rirc.prototype.loadNetworks = function() {
     $.each(global.settings.networks, function(key, network) {
         var nickname    = global.settings.nickname;
         var client      = new irc.Client(network.ip, nickname, {
+            userName: nickname,
+            realName: nickname,
             channels: network.channels,
         });
         var rircClient  = new RircClient(client, nickname, network.ip);
@@ -419,17 +422,17 @@ $(document).ready(function() {
     $(".rirc").layout({
         applyDefaultStyles: false,
         resizerClass: "dragbar",
+        resizeWhileDragging: true,
         closable: false,
         west: {
             minSize: 110,
+            maxSize: "45%",
             //size: //From config
         },
         east: {
             minSize: 110,
+            maxSize: "45%",
             //size: //From config
-        },
-        center: {
-            minSize: 400
         }
     });
 

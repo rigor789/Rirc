@@ -21,6 +21,7 @@
  * on the bukkit chat color handling system
  */
 
+'use strict';
 function ColorParser() {
     this.incremental_regex = new RegExp('(\x03(1[0-5]|0?[0-9])|\x0f|\x1d|\x02|\x1f)');
     this.open_tag          = '<span style="%s;">';
