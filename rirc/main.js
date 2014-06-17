@@ -411,6 +411,11 @@ $(document).ready(function() {
         }
     });
     
+    $(document).keypress(function(event) {
+        if(event.ctrlKey) return;
+        $("#chatbox").focus();
+    });
+    
     $(".rirc").layout({
         applyDefaultStyles: false,
         resizerClass: "dragbar",
