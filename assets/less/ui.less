@@ -18,8 +18,9 @@
 
 body {
     -webkit-user-select: none;
+    cursor: default;
     height: 100%;
-    background: #f1f1f1;
+    background: @background-color;
 }
 .content {
     position: fixed;
@@ -32,38 +33,44 @@ body {
     -webkit-app-region: drag;
     height: 30px;
     width: 100%;
-    background: #666666;
+    background: @background-color-dark;
     position: fixed;
     top: 0;
     margin: 0;
     h1 {
         font-size: 15px;
-        color: #fff;
+        color: @titlebar-color;
         position: fixed;
         top: -13px;
         margin-left: 10px;
     }
-    .buttons {
-        -webkit-app-region: no-drag;
-        float: right;
-        #close:hover {
-            background: rgba(153, 0, 0, 0.5);
-        }
-        #minimize:hover {
-            background: rgba(51, 51, 51, 0.3);
-        }
-    }
     ul.buttons {
+        -webkit-app-region: no-drag;
         list-style: none;
+        float: right;
+        margin: 0;        
         padding: 0;
-        li {
+        li, a {
             display: inline-block;
         }
         a {
-            display: inline-block;
             padding: 5px 10px;
             text-decoration: none;
-            color: #fff;
+            color: @menubar-buttons-color;
+        }
+        #close{
+            background: @close-button;
+            width: 50px;
+            text-align: center;
+            &:hover {
+                background: @close-button-hover;
+            }
+        }
+        #minimize {
+            
+            &:hover {
+                background: @minimize-button-hover;
+            }
         }
     }
 }
@@ -72,7 +79,7 @@ body {
     top: 30px;
     height: 20px;
     width: 100%;
-    background: #555;
+    background: @background-color-dark;
     line-height: 20px;
     ul {
         list-style: none;
@@ -81,12 +88,12 @@ body {
         li {
             display: inline-block;
             a {
-                color: #fff;
+                color: @menu-buttons-color;
                 padding: 0 5px;
                 text-decoration: none;
             }
             a:hover {
-                background: rgba(167, 164, 164, 0.62);
+                background: @menu-buttons-hover-color;
             }
         }
     }
@@ -94,12 +101,12 @@ body {
 .statusbar {
     height: 30px;
     width: 100%;
-    background: #666666;
+    background: @background-color-dark;
     position: fixed;
     bottom: 0;
     p {
         line-height: 30px;
-        color: #fff;
+        color: @statusbar-color;
         padding: 0 10px;
     }
 }
@@ -108,15 +115,14 @@ body {
     height: 10px;
 }
 ::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: @color-transparent;
 }
 ::-webkit-scrollbar-thumb:vertical {
-    background-color: rgba(102, 102, 102, 0.5);
+    background-color: @scrollbar-thumb;
 }
 ::-webkit-scrollbar-thumb:horizontal {
-    background-color: rgba(102, 102, 102, 0.5);
-    background-color: rgba(0,0,0,.2);
+    background-color: @scrollbar-thumb;
 }
 ::-webkit-scrollbar-thumb:vertical:hover,::-webkit-scrollbar-thumb:horizontal:hover {
-    background: rgba(102, 102, 102, 0.3);
+    background: @scrollbar-thumb-hover;
 }

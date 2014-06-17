@@ -26,27 +26,28 @@
             font-size: 16px;
             word-break: break-all;
             word-wrap: break-word;
-            color: #333;
+            color: @font-color;
         }
     }
     td.timestamp {
+        -webkit-user-select: none;
         max-width: 70px;
         width: auto;
         overflow: hidden;
     }
     td.nickname {
-        border-right: 1px solid #333;
+        border-right: 1px solid @nickname-border-color;
     }
     td.message {
         width: 80%;
     }
     .timestamp {
-        color: green;
+        color: @font-color;
     }
     .nickname {
-        color: blue;
+        color: @font-color;
     }
     .message {
-        color: gray;
+        color: @font-color;
     }
 }
