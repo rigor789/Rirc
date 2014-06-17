@@ -58,7 +58,6 @@
 }
 
 ul.channels {
-    width: calc(100% - 5px) !important;
     list-style: none;
     padding: 5px;
 }
@@ -135,29 +134,13 @@ ul.userlist li a:hover {
     background: rgba(153, 153, 153, 0.5);
 }
 
-#channels .dragbar {
+.dragbar {
    background-color: #666;
    height:100%;
-   float: right;
    width: 5px;
    cursor: col-resize;
 }
 
-#userlist .dragbar {
-   background-color: #666;
-   height:100%;
-   float: left;
-   width: 5px;
-   cursor: col-resize;
-}
 #userlist a {
     color: inherit;
-}
-
-#ghostbar {
-    width:6px;
-    background-color:#777;
-    position:absolute;
-    cursor: col-resize;
-    z-index:999;
 }

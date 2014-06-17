@@ -15,31 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var irc                 = require('irc');                   // IRC
-var gui                 = require('nw.gui');                // NodeWebkit GUI
-var settings            = require('./rirc/settings.js');    // Settings
-var colors              = require('./rirc/colors.js')       // Colors
-var user                = require('./rirc/user.js')         // User
-var color_parser        = require('./rirc/colorparser.js')  // Color Parser
+'use strict';
+var gui                 = require('nw.gui'),
+    irc                 = require('irc'),
+    settings            = require('./rirc/settings.js');
 
-// Load the settings
-global.settings         = settings.loadSettings();
 global.gui              = gui;
+global.jQuery           = jQuery;
 global.mainWindow       = gui.Window.get();
+global.settings         = settings.loadSettings();
 
-/**
- * Update client status
- */
-global.updateStatus = function(status, duration) {
-    $("#status").html(status);
-    if(duration === undefined) {
-        return;
-    }
-    setTimeout(
-        function() {
-            $("#status").html('Idle');
-        }, duration * 1000);
-}
+var clientWindow        = require('./rirc/client.js'),
+    color_parser        = require('./rirc/colorparser.js'),
+    colors              = require('./rirc/colors.js'),
+    user                = require('./rirc/user.js');
+
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
+});
 
 /**
  * RircSession represents everything that happens in one channel, aka the chat itself, and the users list.
@@ -79,18 +72,18 @@ RircSession.prototype.printLine = function(message, sender, color) {
  * drawLine will display a line, but not add it to the buffer
  */
 RircSession.prototype.drawLine = function(message, sender, color) {
-    sender = typeof sender !== 'undefined' ? sender : "*";
-    message = RircUtils.escapeInput(message);
-    message = RircUtils.parseUrls(message);
-    message = RircUtils.parseColors(message);
-    var color = typeof color  !== 'undefined' ? color: "initial";
-    var time = RircUtils.getTimestamp();
-    var line = '<tr>' +
-                '<td class="timestamp">' + time + '</td>' +
-                '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
-                '<td class="message"><pre>' + message + '</pre></td>' +
-                '</tr>';
-    var client = rirc.getActiveClient();
+    sender      = typeof sender !== 'undefined' ? sender : "*";
+    message     = RircUtils.escapeInput(message);
+    message     = RircUtils.parseUrls(message);
+    message     = RircUtils.parseColors(message);
+    var color   = typeof color  !== 'undefined' ? color: "initial";
+    var time    = RircUtils.getTimestamp();
+    var line    = '<tr>' +
+                  '<td class="timestamp">' + time + '</td>' +
+                  '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
+                  '<td class="message"><pre>' + message + '</pre></td>' +
+                  '</tr>';
+    var client  = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
     if(session === this) {
         $("#chatlist tbody").append(line);
@@ -149,7 +142,7 @@ function RircClient(client, nickname, ip) {
     var connecting          = "Connecting to " + ip;
     this.sessions[ip]       = serverSession;
 
-    global.updateStatus(connecting);
+    clientWindow.updateStatus(connecting);
     serverSession.printLine(connecting);
     this.addListeners();
 }
@@ -267,7 +260,7 @@ RircClient.prototype.addListeners = function() {
             session.printLine('Connected to ' + message.server + ' as ' + rircClient.nickname);
             session.printLine(message.args[1], message.prefix);
         }
-        global.updateStatus("Connected to " + message.server, 3);
+        clientWindow.updateStatus("Connected to " + message.server, 3);
     });
 
     client.addListener('motd', function(motd) {
@@ -369,15 +362,8 @@ Rirc.prototype.setActiveClient = function(ip) {
 var rirc = new Rirc();
 rirc.loadNetworks();
 
-window.onfocus = function() {
-    //global.updateStatus("focus", 1);
-}
-
-window.onblur = function() {
-    //global.updateStatus("blur", 1);;
-}
-
-$(function(){
+$(document).ready(function() {
+    
     $(document).on('click', 'a.channel', function() {
         var id = $(this).attr('href').split('|');
 
@@ -391,26 +377,12 @@ $(function(){
         global.gui.Shell.openExternal($(this).attr("href"));
         return false;
     });
-});
-
-//var menu = new gui.Menu();
-//menu.append(new gui.MenuItem({ label: 'Item A' }));
-//menu.append(new gui.MenuItem({ label: 'Item B' }));
-//menu.append(new gui.MenuItem({ type: 'separator' }));
-//menu.append(new gui.MenuItem({ label: 'Item C' }));
-
-
-//for (var i = 0; i < menu.items.length; ++i) {
-//  console.log(menu.items[i]);
-//}
-
-window.onload = function() {
-
+    
     $("#fileMenu").click(function(event) {
         event.preventDefault();
         var y = $(this).offset().top + $(this).outerHeight(true);
         var x = $(this).offset().left;
-        menu.popup(x, y);
+        //menu.popup(x, y);
     });
 
     $("#minimize").click(function() {
@@ -438,77 +410,22 @@ window.onload = function() {
             $(this).val("");
         }
     });
-
-    var dragging = [];
-    $('#channels .dragbar').mousedown(function(e) {
-        e.preventDefault();
-        dragging['channels'] = true;
-        var channels = $('#channels .dragbar');
-        var ghostbar = $('<div>', { id:'ghostbar', css: { height: channels.outerHeight(), top: channels.offset().top, left: channels.offset().left }}).appendTo('body');
-
-        $(document).mousemove(function(e){
-            var left = e.pageX;
-            if(left < parseInt($("#channels").css("min-width"))) {
-               left = parseInt($("#channels").css("min-width"));
-            }
-            ghostbar.css("left",left);
-        });
-    });
-
-    $('#userlist .dragbar').mousedown(function(e) {
-        e.preventDefault();
-        dragging['userlist'] = true;
-        var userlist = $('#userlist .dragbar');
-        var ghostbar = $('<div>', { id:'ghostbar', css: { height: userlist.outerHeight(), top: userlist.offset().top, left: userlist.offset().left }}).appendTo('body');
-
-        $(document).mousemove(function(e){
-            var left = e.pageX + 5;
-            var maxwidth = window.innerWidth - parseInt($("#userlist").css("min-width"))
-            if(left > maxwidth) {
-               left = window.innerWidth - parseInt($("#userlist").css("min-width"));
-            }
-            ghostbar.css("left",left);
-        });
-    });
-
-    $(document).mouseup(function(e){
-        if (dragging['channels']) {
-            resizePanes('channels', $("#ghostbar").offset().left);
-            $('#ghostbar').remove();
-            $(document).unbind('mousemove');
-            dragging['channels'] = false;
-        } else if(dragging['userlist']) {
-            resizePanes('userlist', window.innerWidth - $("#ghostbar").offset().left);
-            $('#ghostbar').remove();
-            $(document).unbind('mousemove');
-            dragging['userlist'] = false;
+    
+    $(".rirc").layout({
+        applyDefaultStyles: false,
+        resizerClass: "dragbar",
+        closable: false,
+        west: {
+            minSize: 150,
+            size: 480
+        },
+        east: {
+            minSize: 150
         }
     });
 
-    function resizePanes(relativeTo, newWidth) {
-        newWidth = getPercentage(newWidth);
-        var totalWidth;
-        switch(relativeTo) {
-            case 'channels':
-                $('#channels').css("width", newWidth + "%");
-                totalWidth = newWidth + getPercentage($("#userlist").width());
-                break;
-            case 'userlist':
-                $('#userlist').css("width", newWidth + "%");
-                totalWidth = newWidth + getPercentage($("#channels").width());
-                break;
-        }
-        var chatWidth = 100 - totalWidth;
-        $('#chat').css("width", chatWidth + "%");
-    }
+});
 
-    function getPercentage(width) {
-        return width / ( window.innerWidth / 100 );
-    }
-
+window.onload = function() {
     global.mainWindow.show();
 }
-
-process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
-});

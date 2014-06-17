@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rirc - IRC client by rigor789</title>
-    <link rel="stylesheet" href="public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="public/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="public/css/font-awesome.min.css">
-    <link rel="stylesheet" href="public/css/style.css">
-    <link rel="stylesheet" href="public/css/rirc.css">
-    <link rel="stylesheet" href="public/css/chat.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/rirc.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
 </head>
 <body>
 <div class="titlebar">
@@ -30,12 +30,11 @@
 
 <div id="window" class="content">
     <div class="rirc">
-        <div id="channels" class="pull-left">
+        <div id="channels" class="ui-layout-west">
             <div class="title">
                 <h1><i class="fa fa-bars"></i> Channels</h1>
             </div>
             <div class="contentpane">
-                <div class="dragbar"></div>
                 <ul class="channels">
                     <!--<li><a href="#">#ten.java <span class="label label-info pull-right">15</span></a></li>
                     <li><a href="#">#test <span class="label label-warning pull-right">5</span></a></li>
@@ -44,7 +43,7 @@
                 </ul>
             </div>
         </div>
-        <div id="chat" class="pull-left">
+        <div id="chat" class="ui-layout-center">
             <div class="title text-center">
                 <h1><i class="fa fa-weixin"></i> Chat</h1>
             </div>
@@ -65,12 +64,11 @@
                 <input id="chatbox" type="text" placeholder="Chat here...">
             </div>
         </div>
-        <div id="userlist" class="pull-right">
+        <div id="userlist" class="ui-layout-east">
             <div class="title text-right">
                 <h1>Users <i class="fa fa-users"></i></h1>
             </div>
             <div class="contentpane">
-                <div class="dragbar"></div>
                 <ul class="userlist">
                     <!--<li><a href="#">@rigor789</a></li>-->
                 </ul>
@@ -84,16 +82,11 @@
     <p class="pull-right">Connected as: <span id="user">-</span></p>
 </div>
 
-<script type="application/javascript" src="public/js/jquery-1.11.1.min.js"></script>
-<script type="application/javascript" src="public/js/jquery-ui-1.10.4.min.js"></script>
-<script type="application/javascript" src="public/js/bootstrap.min.js"></script>
+<script type="application/javascript" src="assets/js/jquery-1.11.1.min.js"></script>
+<script type="application/javascript" src="assets/js/jquery-ui-1.10.4.min.js"></script>
+<script type="application/javascript" src="assets/js/jquery.layout.min.js"></script>
+<script type="application/javascript" src="assets/js/bootstrap.min.js"></script>
 <script type="application/javascript" src="rirc/main.js"></script>
 <script type="application/javascript" src="rirc/winstate.js"></script>
-<script type="application/javascript">
-    require("nw.gui").Window.get().show();
-</script>
-<script type="application/javascript">
-    //
-</script>
 </body>
 </html>

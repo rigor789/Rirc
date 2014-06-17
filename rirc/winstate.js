@@ -21,8 +21,8 @@
  *   Now it works correctly.
  */
 
-var gui = require('nw.gui');
-var win = gui.Window.get();
+var gui     = global.gui;
+var win     = global.mainWindow
 var winState;
 var currWinMode;
 var resizeTimeout;
