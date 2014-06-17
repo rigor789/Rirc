@@ -66,6 +66,9 @@ ul.channels li a {
     text-decoration: none;
     color: #666;
     padding: 5px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 ul.channels li a.active {
@@ -127,6 +130,9 @@ ul.userlist li a {
     text-decoration: none;
     color: #666;
     padding: 5px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 ul.userlist li a:hover {
