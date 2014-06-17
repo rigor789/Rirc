@@ -19,23 +19,24 @@
 'use strict';
 var fs              = require('fs'),
     path            = require('path'),
-    colorschemes    = path.dirname(process.execPath) + path.sep + "colorschemes" + path.sep,
+    colorschemes    = path.dirname(process.execPath) + path.sep + "themes" + path.sep,
     $               = global.jQuery;
     document        = global.mainWindow.window.document;
 
-function ColorScheme(name) {
+function Theme(name) {
     this.name = name;
     this.path = colorschemes + name + '.css';
 }
 
-ColorScheme.prototype.load = function() {
+Theme.prototype.load = function() {
     var link = $('<link>');
     link.attr('rel', 'stylesheet');
     link.attr('type', 'text/css');
     link.attr('href', this.path);
+    link.appendTo($('<head>'));
 }
 
-ColorScheme.list = function() {
+Theme.list = function() {
     console.log(colorschemes);
     fs.readdir(colorschemes, function(err, files) {
         if (!err) {
@@ -46,5 +47,5 @@ ColorScheme.list = function() {
     });
 }
 
-module.exports.ColorScheme      = ColorScheme;
-module.exports.ColorScheme.list = ColorScheme.list;
+module.exports.Theme      = Theme;
+module.exports.Theme.list = Theme.list;

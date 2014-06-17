@@ -21,63 +21,52 @@ body {
     height: 100%;
     background: #f1f1f1;
 }
-
 .content {
     position: fixed;
     top: 50px;
-    height: calc(100% - 80px);
+    height: ~"calc(100% - 80px)";
     width: 100%;
     margin-bottom: 30px;
 }
-
 .titlebar {
     -webkit-app-region: drag;
-
     height: 30px;
     width: 100%;
     background: #666666;
     position: fixed;
     top: 0;
     margin: 0;
+    h1 {
+        font-size: 15px;
+        color: #fff;
+        position: fixed;
+        top: -13px;
+        margin-left: 10px;
+    }
+    .buttons {
+        -webkit-app-region: no-drag;
+        float: right;
+        #close:hover {
+            background: rgba(153, 0, 0, 0.5);
+        }
+        #minimize:hover {
+            background: rgba(51, 51, 51, 0.3);
+        }
+    }
+    ul.buttons {
+        list-style: none;
+        padding: 0;
+        li {
+            display: inline-block;
+        }
+        a {
+            display: inline-block;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+    }
 }
-
-.titlebar h1 {
-    font-size: 15px;
-    color: #fff;
-    position: fixed;
-    top: -13px;
-    margin-left: 10px;
-}
-
-.titlebar .buttons #close:hover {
-    background: rgba(153, 0, 0, 0.5);
-}
-
-.titlebar .buttons #minimize:hover {
-    background: rgba(51, 51, 51, 0.3);
-}
-
-.titlebar .buttons {
-    -webkit-app-region: no-drag;
-    float: right;
-}
-
-.titlebar ul.buttons {
-    list-style: none;
-    padding: 0;
-}
-
-.titlebar ul.buttons li {
-    display: inline-block;
-}
-
-.titlebar ul.buttons a {
-    display: inline-block;
-    padding: 5px 10px;
-    text-decoration: none;
-    color: #fff;
-}
-
 .menubar {
     position: fixed;
     top: 30px;
@@ -85,64 +74,49 @@ body {
     width: 100%;
     background: #555;
     line-height: 20px;
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 10px;
+        li {
+            display: inline-block;
+            a {
+                color: #fff;
+                padding: 0 5px;
+                text-decoration: none;
+            }
+            a:hover {
+                background: rgba(167, 164, 164, 0.62);
+            }
+        }
+    }
 }
-
-.menubar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 10px;
-}
-
-.menubar ul li {
-    display: inline-block;
-}
-
-.menubar ul li a {
-    color: #fff;
-    padding: 0 5px;
-    text-decoration: none;
-}
-
-.menubar ul li a:hover {
-    background: rgba(167, 164, 164, 0.62);
-}
-
 .statusbar {
     height: 30px;
     width: 100%;
     background: #666666;
     position: fixed;
     bottom: 0;
+    p {
+        line-height: 30px;
+        color: #fff;
+        padding: 0 10px;
+    }
 }
-
-.statusbar p {
-    line-height: 30px;
-    color: #fff;
-    padding: 0 10px;
-}
-
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
-
 ::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);
 }
-
 ::-webkit-scrollbar-thumb:vertical {
     background-color: rgba(102, 102, 102, 0.5);
 }
-
 ::-webkit-scrollbar-thumb:horizontal {
     background-color: rgba(102, 102, 102, 0.5);
-}
-
-::-webkit-scrollbar-thumb:vertical:hover,
-::-webkit-scrollbar-thumb:horizontal:hover {
-    background: rgba(102, 102, 102, 0.3);
-}
-
-::-webkit-scrollbar-thumb:horizontal {
     background-color: rgba(0,0,0,.2);
+}
+::-webkit-scrollbar-thumb:vertical:hover,::-webkit-scrollbar-thumb:horizontal:hover {
+    background: rgba(102, 102, 102, 0.3);
 }

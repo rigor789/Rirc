@@ -16,42 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#chatlist td pre {
-    margin: 0;
-    font-size: 16px;
-    word-break: break-all;
-    word-wrap: break-word;
-    color: #333;
-}
-
 #chatlist {
     table-layout: fixed;
     width: 100%;
     max-width: 100%;
-}
-
-#chatlist td.timestamp {
-    max-width: 70px;
-    width: auto;
-    overflow: hidden;
-}
-
-#chatlist td.nickname {
-    border-right: 1px solid #333;
-}
-
-#chatlist td.message {
-    width: 80%;
-}
-
-#chatlist .timestamp {
-    color: green;
-}
-
-#chatlist .nickname {
-    color: blue;
-}
-
-#chatlist .message {
-    color: gray;
+    td {
+        pre {
+            margin: 0;
+            font-size: 16px;
+            word-break: break-all;
+            word-wrap: break-word;
+            color: #333;
+        }
+    }
+    td.timestamp {
+        max-width: 70px;
+        width: auto;
+        overflow: hidden;
+    }
+    td.nickname {
+        border-right: 1px solid #333;
+    }
+    td.message {
+        width: 80%;
+    }
+    .timestamp {
+        color: green;
+    }
+    .nickname {
+        color: blue;
+    }
+    .message {
+        color: gray;
+    }
 }
