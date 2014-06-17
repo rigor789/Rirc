@@ -416,11 +416,15 @@ $(document).ready(function() {
         resizerClass: "dragbar",
         closable: false,
         west: {
-            minSize: 150,
-            size: 480
+            minSize: 110,
+            //size: //From config
         },
         east: {
-            minSize: 150
+            minSize: 110,
+            //size: //From config
+        },
+        center: {
+            minSize: 400
         }
     });
 

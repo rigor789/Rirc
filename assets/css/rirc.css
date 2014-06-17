@@ -35,7 +35,6 @@
 .rirc #channels,
 .rirc #userlist {
     width: 20%;
-    min-width: 130px;
 }
 
 .rirc #chat {
