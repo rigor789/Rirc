@@ -2,6 +2,7 @@
 
 ![Dependencies](https://david-dm.org/rigor789/rirc.png)
 ![Dev Dependencies](https://david-dm.org/rigor789/rirc/dev-status.png?theme=shields.io)
+[![Build Status](https://travis-ci.org/rigor789/Rirc.svg?branch=dev)](https://travis-ci.org/rigor789/Rirc)
 
 ## Introduction
 
