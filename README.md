@@ -1,7 +1,7 @@
 ## ![Logo](https://github.com/rigor789/Rirc/raw/master/icon48.png "Rirc - an IRC client by rigor789") Rirc - an IRC client by rigor789
 
-[![Dependencies](https://david-dm.org/rigor789/rirc.png)](https://david-dm.org/rigor789/rirc/)
-[![Dev Dependencies](https://david-dm.org/rigor789/rirc/dev-status.png?theme=shields.io)](https://david-dm.org/rigor789/rirc/)
+[![Dependencies](https://david-dm.org/rigor789/rirc.svg)](https://david-dm.org/rigor789/rirc/)
+[![Dev Dependencies](https://david-dm.org/rigor789/rirc/dev-status.svg?theme=shields.io)](https://david-dm.org/rigor789/rirc/)
 [![Build Status](https://travis-ci.org/rigor789/Rirc.svg?branch=dev)](https://travis-ci.org/rigor789/Rirc)
 [![Release](http://img.shields.io/github/release/rigor789/rirc.svg)](https://github.com/rigor789/Rirc/releases)
 [![License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rigor789/Rirc/blob/master/LICENSE.txt)
