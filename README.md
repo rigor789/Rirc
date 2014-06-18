@@ -3,6 +3,9 @@
 [![Dependencies](https://david-dm.org/rigor789/rirc.png)](https://david-dm.org/rigor789/rirc/)
 [![Dev Dependencies](https://david-dm.org/rigor789/rirc/dev-status.png?theme=shields.io)](https://david-dm.org/rigor789/rirc/)
 [![Build Status](https://travis-ci.org/rigor789/Rirc.svg?branch=dev)](https://travis-ci.org/rigor789/Rirc)
+[![Release](http://img.shields.io/github/release/rigor789/rirc.svg)](https://github.com/rigor789/Rirc/releases)
+[![License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rigor789/Rirc/blob/master/LICENSE.txt)
+[![Gittip](http://img.shields.io/gittip/rigor789.svg)](https://www.gittip.com/rigor789/)
 
 ## Introduction
 
