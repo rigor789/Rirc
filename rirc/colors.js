@@ -19,11 +19,18 @@
 'use strict';
 exports.Colors = function() {
     this.colors  = [
-        'black',
-        'blue',
-        'green',
-        'red',
-        'orange',
+        'irc-dark-blue',
+        'irc-dark-green',
+        'irc-dark-red',
+        'irc-magenta',
+        'irc-magenta',
+        'irc-yellow',
+        'irc-cyan',
+        'irc-light-red',
+        'irc-light-green',
+        'irc-light-cyan',
+        'irc-light-blue',
+        'irc-light-magenta',
     ];
     this.current = -1;
 }

@@ -3,10 +3,15 @@
 .background-channels,
 .background-users
                     { background: #1c1c1c; }
-.timestamp          { color: ; }
-.message            { color: #666; }
-.link               { color: #00afaf; border-bottom: dotted 1px; text-decoration: none; }
-.link:hover         { color: #006DCC; border-color: #00afaf; text-decoration: none; }
+.timestamp          { color: #707C70; }
+.nickname           { border-right-color: #F8F8F2; }
+.message            { color: #75715E; }
+.link               { color: #00afaf;
+                      border-bottom: dotted 1px;
+                      text-decoration: none; }
+.link:hover         { color: #006DCC;
+                      border-color: #00afaf;
+                      text-decoration: none; }
 .irc-white          { color: #ffffff; }
 .irc-black          { color: #000000; }
 .irc-dark-blue      { color: #000088; }
@@ -26,3 +31,16 @@
 .irc-bold           { font-weight: bold; }
 .irc-italic         { font-style: italic; }
 .irc-underline      { text-decoration: underline; }
+
+ul.userlist li a,
+ul.channels li a {
+    color: #D0D0D0;
+}
+
+.rirc .title, .dragbar {
+    background: #272822;
+}
+
+.rirc .messagebox {
+    border-top-color: #272822;
+}

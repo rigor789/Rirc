@@ -59,7 +59,7 @@ RircSession.prototype.drawSession = function() {
     $(".userlist").html("");
     $("#user").html(rirc.getActiveClient().nickname);
     this.users.forEach(function(user) {
-        $(".userlist").append('<li style="color: ' + user.color + ';"><a href="#">' + user.permission + user.nick + '</a></li>');
+        $(".userlist").append('<li class="' + user.color + '"><a href="#">' + user.permission + user.nick + '</a></li>');
     });
     $.each(this.buffer, function(key, line) {
         $("#chatlist tbody").append(line);
@@ -87,7 +87,7 @@ RircSession.prototype.drawLine = function(message, sender, color) {
     var time    = RircUtils.getTimestamp();
     var line    = '<tr>' +
                   '<td class="timestamp">' + time + '</td>' +
-                  '<td class="nickname text-right"><span style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + '</span></td>' +
+                  '<td class="nickname text-right"><span class="' + color + '">' + RircUtils.escapeInput(sender) + '</span></td>' +
                   '<td class="message"><pre>' + message + '</pre></td>' +
                   '</tr>';
     var client  = rirc.getActiveClient();
@@ -224,8 +224,9 @@ RircClient.prototype.addListeners = function() {
         session.users   = [];
 
         $.each(nicks, function(nick, perm) {
-            formatted += nick + " ";
-            session.users.push(new user.User(nick, perm, session.colors.next()));
+            var color = session.colors.next()
+            formatted += '<span class="' + color + '">' + nick + '</span> ';
+            session.users.push(new user.User(nick, perm, color));
         });
 
         session.users.sort(function(a, b) {
