@@ -28,10 +28,16 @@ fileMenu.append(new gui.MenuItem({ label: 'WUT' }));
 fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 fileMenu.append(new gui.MenuItem({ label: 'Exit' }));
 
+for (var i = 0; i < fileMenu.items.length; ++i) {
+    onClick(i);
+}
 
-//for (var i = 0; i < menu.items.length; ++i) {
-//  console.log(menu.items[i]);
-//}
+function onClick(item) {
+    fileMenu.items[item].click = function() { 
+        console.log(fileMenu.items[item].label);
+    };
+}
+
 $(document).ready(function() {
     $("#fileMenu").click(function(event) {
         event.preventDefault();
