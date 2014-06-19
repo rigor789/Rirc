@@ -21,22 +21,30 @@
     width: 100%;
     max-width: 100%;
     .timestamp {
-        max-width: 70px;
-        width: auto;
+        width: 70px;
         overflow: hidden;
     }
     .nickname {
+        width: 100px;
         border-right-width: 1px;
         border-right-style: solid;
         padding-right: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .message {
-        width: 80%;
+        width: 100%;
         font-size: 16px;
-        pre {
+        /*pre {
             margin: 0;
             word-break: break-all;
             word-wrap: break-word;
+        }*/
+        .preformatted {
+            display: block;
+            unicode-bidi: embed;
+            font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+            white-space: pre-wrap;
         }
     }
     &.table {

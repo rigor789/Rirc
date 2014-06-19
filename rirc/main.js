@@ -70,25 +70,44 @@ RircSession.prototype.drawSession = function() {
 /**
  * printLine will print a line to the session
  */
-RircSession.prototype.printLine = function(message, sender, color) {
-    var line = this.drawLine(message, sender, color);
+RircSession.prototype.printLine = function(message, options) {
+    var defaults    = { 
+        sender: "*",
+        color: "initial",
+        escape: true,
+        colors: true,
+        urls: true
+    };
+    var options     = options || defaults;
+    for(var key in defaults) {
+        if(options[key] === undefined) {
+            options[key] = defaults[key];   
+        }
+    }
+    
+    var line = this.drawLine(message, options);
     this.buffer[this.buffer.length] = line;
 }
 
 /**
  * drawLine will display a line, but not add it to the buffer
  */
-RircSession.prototype.drawLine = function(message, sender, color) {
-    sender      = typeof sender !== 'undefined' ? sender : "*";
-    message     = RircUtils.escapeInput(message);
-    message     = RircUtils.parseUrls(message);
-    message     = RircUtils.parseColors(message);
-    var color   = typeof color  !== 'undefined' ? color: "initial";
+RircSession.prototype.drawLine = function(message, options) {
+    if(options.escape) {
+        message         = RircUtils.escapeInput(message);
+        options.sender  = RircUtils.escapeInput(options.sender);
+    }
+    if(options.urls) {
+        message         = RircUtils.parseUrls(message);
+    }
+    if(options.colors) {
+        message         = RircUtils.parseColors(message);
+    }
     var time    = RircUtils.getTimestamp();
     var line    = '<tr>' +
                   '<td class="timestamp">' + time + '</td>' +
-                  '<td class="nickname text-right"><span class="' + color + '">' + RircUtils.escapeInput(sender) + '</span></td>' +
-                  '<td class="message"><pre>' + message + '</pre></td>' +
+                  '<td class="nickname text-right"><span class="' + options.color + '">' + options.sender + '</span></td>' +
+                  '<td class="message"><div class="preformatted">' + message + '</div></td>' +
                   '</tr>';
     var client  = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
@@ -199,15 +218,15 @@ RircClient.prototype.addListeners = function() {
         if(!!session)
             // User messaging the chan from outside are undefined
             if(typeof user === 'undefined')
-                session.printLine(message, from);
+                session.printLine(message, { sender: from });
             else
-                session.printLine(message, user.nick, user.color);
+                session.printLine(message, { sender: user.nick, color: user.color });
     });
 
     client.addListener('pm', function (nick, text, message) {
         var session = rircClient.getSession(nick);
         if(!!session)
-            session.printLine(text, nick);
+            session.printLine(text, { sender: nick });
     });
 
     client.addListener('error', function(message) {
@@ -257,7 +276,7 @@ RircClient.prototype.addListeners = function() {
         });
 
         if(!!session)
-            session.printLine(formatted);
+            session.printLine(formatted, { escape: false });
     });
 
     client.addListener('registered', function(message) {
@@ -266,7 +285,7 @@ RircClient.prototype.addListeners = function() {
         var session = rircClient.getSession(rircClient.ip);
         if(!!session) {
             session.printLine('Connected to ' + message.server + ' as ' + rircClient.nickname);
-            session.printLine(message.args[1], message.prefix);
+            session.printLine(message.args[1], { sender: message.prefix });
         }
         clientWindow.updateStatus("Connected to " + message.server, 3);
     });
@@ -281,7 +300,7 @@ RircClient.prototype.addListeners = function() {
         var time = new Date(message.args[3] * 1000);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);
+            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, { sender: message.prefix });
     });
 
     client.addListener('join', function(channel, nick, message) {
@@ -415,7 +434,7 @@ $(document).ready(function() {
 
             var client = rirc.getActiveClient();
             var session = client.getActiveSession();
-            session.printLine(message, client.nickname);
+            session.printLine(message, { sender: client.nickname, color: "irc-yellow" });
             client.client.say(session.channel, message);
             $(this).val("");
         }
@@ -442,7 +461,7 @@ $(document).ready(function() {
             //size: //From config
         }
     });
-
+    
 });
 
 window.onload = function() {
