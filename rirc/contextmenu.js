@@ -18,14 +18,25 @@
 
 'use strict';
 var gui             = global.gui;
+var $               = global.jQuery;
+var document        = global.document;
 
-//var menu = new gui.Menu();
-//menu.append(new gui.MenuItem({ label: 'Item A' }));
-//menu.append(new gui.MenuItem({ label: 'Item B' }));
-//menu.append(new gui.MenuItem({ type: 'separator' }));
-//menu.append(new gui.MenuItem({ label: 'Item C' }));
+var fileMenu        = new gui.Menu();
+
+fileMenu.append(new gui.MenuItem({ label: 'YOLO' }));
+fileMenu.append(new gui.MenuItem({ label: 'WUT' }));
+fileMenu.append(new gui.MenuItem({ type: 'separator' }));
+fileMenu.append(new gui.MenuItem({ label: 'Exit' }));
 
 
 //for (var i = 0; i < menu.items.length; ++i) {
 //  console.log(menu.items[i]);
 //}
+$(document).ready(function() {
+    $("#fileMenu").click(function(event) {
+        event.preventDefault();
+        var y = $(this).offset().top + $(this).outerHeight(true);
+        var x = $(this).offset().left;
+        fileMenu.popup(x, y);
+    });
+});

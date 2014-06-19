@@ -30,6 +30,7 @@ global.settings         = settings.loadSettings();
 var clientWindow        = require('./rirc/client.js'),
     color_parser        = require('./rirc/colorparser.js'),
     colors              = require('./rirc/colors.js'),
+    contextmenu         = require('./rirc/contextmenu.js'),
     theme               = require('./rirc/theme.js'),
     user                = require('./rirc/user.js');
 
@@ -407,12 +408,6 @@ $(document).ready(function() {
         return false;
     });
 
-    $("#fileMenu").click(function(event) {
-        event.preventDefault();
-        var y = $(this).offset().top + $(this).outerHeight(true);
-        var x = $(this).offset().left;
-        //menu.popup(x, y);
-    });
 
     $("#minimize").click(function() {
         global.mainWindow.minimize();
