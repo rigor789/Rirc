@@ -1,0 +1,121 @@
+/**
+ * Rirc - IRC client by rigor789
+ * Copyright (C) 2014  Igor Randjelovic <rigor789>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "variables.less";
+@import "ui.less";
+@import "chat.less";
+
+.rirc {
+    height: 100%;
+    .title {
+        height: 30px;
+        background: @title-background;
+        h1 {
+            font-size: 16px;
+            line-height: 30px;
+            color: @title-color;
+            margin: 0 10px 0;
+        }
+    }
+    #chat {
+        width: 60%;
+    }
+    .contentpane {
+        overflow-y: auto;
+        height: ~"calc(100% - 30px)";
+    }
+    .separator {
+        border-bottom: 1px solid @separator-border-color;
+        margin: 5px 0;
+    }
+    .messagebox {
+        height: 30px;
+        border-top-width: 5px;
+        border-top-style: solid;
+        border-top-color: @border-color;
+        label {
+            float: left;
+            line-height: 25px;
+            padding-left: 5px;
+        }
+        input {
+            -webkit-user-select: text;
+            width: ~"calc(100% - 80px)";
+            height: 25px;
+            background: @color-transparent;
+            border: none;
+            float: right;
+        }
+        input:focus {
+            background: @color-transparent;
+            border: none;
+            outline-width: 0;
+        }
+    }
+}
+.rirc #channels,.rirc #userlist {
+    width: 20%;
+}
+.rirc #channels,.rirc #userlist,.rirc #chat {
+    height: 100%;
+}
+#chat {
+    .contentpane {
+        height: ~"calc(100% - 60px)";
+    }
+}
+ul.userlist,
+ul.channels {
+    list-style: none;
+    padding: 5px;
+    li {
+        a {
+            display: block;
+            text-decoration: none;
+            color: @link-color;
+            padding: 5px 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        a.active {
+            background: @block-link-active;
+        }
+        a:hover {
+            background: @block-link-hover;
+        }
+    }
+}
+table.chat {
+    -webkit-user-select: text;
+    width: 100% !important;
+    list-style: none;
+    padding: 5px;
+    border: none !important;
+}
+.dragbar {
+    background-color: @border-color;
+    height:100%;
+    width: 5px;
+    cursor: col-resize;
+}
+#userlist {
+    a {
+        color: inherit;
+    }
+}

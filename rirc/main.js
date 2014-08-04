@@ -15,30 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var irc                 = require('irc');                   // IRC
-var gui                 = require('nw.gui');                // NodeWebkit GUI
-var settings            = require('./rirc/settings.js');    // Settings
-var colors              = require('./rirc/colors.js')       // Colors
-var user                = require('./rirc/user.js')         // User
 
-// Load the settings
-global.settings         = settings.loadSettings();
+'use strict';
+var gui                 = require('nw.gui'),
+    irc                 = require('irc'),
+    settings            = require('./rirc/settings.js');
+
 global.gui              = gui;
+global.jQuery           = jQuery;
 global.mainWindow       = gui.Window.get();
+global.document         = global.mainWindow.window.document;
+global.settings         = settings.loadSettings();
 
-/**
- * Update client status
- */
-global.updateStatus = function(status, duration) {
-    $("#status").html(status);
-    if(duration === undefined) {
-        return;
-    }
-    setTimeout(
-        function() {
-            $("#status").html('Idle');
-        }, duration * 1000);
-};
+var clientWindow        = require('./rirc/client.js'),
+    color_parser        = require('./rirc/colorparser.js'),
+    colors              = require('./rirc/colors.js'),
+    contextmenu         = require('./rirc/contextmenu.js'),
+    theme               = require('./rirc/theme.js'),
+    user                = require('./rirc/user.js');
+
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
+});
+
+if(!!global.settings.theme) {
+    new theme.Theme(global.settings.theme).load();
+}
 
 /**
  * RircSession represents everything that happens in one channel, aka the chat itself, and the users list.
@@ -58,35 +60,57 @@ RircSession.prototype.drawSession = function() {
     $(".userlist").html("");
     $("#user").html(rirc.getActiveClient().nickname);
     this.users.forEach(function(user) {
-        $(".userlist").append('<li style="color: ' + user.color + ';"><a href="#">' + user.permission + user.nick + '</a></li>');
+        $(".userlist").append('<li class="' + user.color + '"><a href="#">' + user.permission + user.nick + '</a></li>');
     });
     $.each(this.buffer, function(key, line) {
         $("#chatlist tbody").append(line);
         $("#chatbuffer").scrollTop($("#chatlist")[0].scrollHeight);
     });
-};
+}
 
 /**
  * printLine will print a line to the session
  */
-RircSession.prototype.printLine = function(message, sender, color) {
-    var line = this.drawLine(message, sender, color);
+RircSession.prototype.printLine = function(message, options) {
+    var defaults    = { 
+        sender: "*",
+        color: "initial",
+        escape: true,
+        colors: true,
+        urls: true
+    };
+    var options     = options || defaults;
+    for(var key in defaults) {
+        if(options[key] === undefined) {
+            options[key] = defaults[key];   
+        }
+    }
+    
+    var line = this.drawLine(message, options);
     this.buffer[this.buffer.length] = line;
-};
+}
 
 /**
  * drawLine will display a line, but not add it to the buffer
  */
-RircSession.prototype.drawLine = function(message, sender, color) {
-    sender = typeof sender !== 'undefined' ? sender : "*";
-    var color = typeof color  !== 'undefined' ? color: "initial";
-    var time = RircUtils.getTimestamp();
-    var line = '<tr>' +
-                '<td class="timestamp">' + time + '</td>' +
-                '<td class="nickname text-right" style="color: ' + color + ';">' + RircUtils.escapeInput(sender) + ':</td>' +
-                '<td class="message"><pre>' + RircUtils.escapeInput(message) + '</pre></td>' +
-                '</tr>';
-    var client = rirc.getActiveClient();
+RircSession.prototype.drawLine = function(message, options) {
+    if(options.escape) {
+        message         = RircUtils.escapeInput(message);
+        options.sender  = RircUtils.escapeInput(options.sender);
+    }
+    if(options.urls) {
+        message         = RircUtils.parseUrls(message);
+    }
+    if(options.colors) {
+        message         = RircUtils.parseColors(message);
+    }
+    var time    = RircUtils.getTimestamp();
+    var line    = '<tr>' +
+                  '<td class="timestamp">' + time + '</td>' +
+                  '<td class="nickname text-right"><span class="' + options.color + '">' + options.sender + '</span></td>' +
+                  '<td class="message"><div class="preformatted">' + message + '</div></td>' +
+                  '</tr>';
+    var client  = rirc.getActiveClient();
     var session = client !== undefined ? client.getActiveSession() : undefined;
     if(session === this) {
         $("#chatlist tbody").append(line);
@@ -101,7 +125,7 @@ RircSession.prototype.getUser = function(username) {
             return this.users[i];
         }
     }
-};
+}
 
 /**
  * RircUtils class
@@ -120,7 +144,17 @@ RircUtils.escapeInput = function(data) {
     } else {
         return '';
     }
-};
+}
+
+RircUtils.parseUrls = function(data) {
+    var expression = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    data = data.replace(expression, '<a href="$1" class="link" >$1</a>');
+    return data;
+}
+
+RircUtils.parseColors = function(data) {
+    return color_parser.parse(data);
+}
 
 /**
  * RircClient class
@@ -135,7 +169,7 @@ function RircClient(client, nickname, ip) {
     var connecting          = "Connecting to " + ip;
     this.sessions[ip]       = serverSession;
 
-    global.updateStatus(connecting);
+    clientWindow.updateStatus(connecting);
     serverSession.printLine(connecting);
     this.addListeners();
 }
@@ -185,15 +219,15 @@ RircClient.prototype.addListeners = function() {
         if(!!session)
             // User messaging the chan from outside are undefined
             if(typeof user === 'undefined')
-                session.printLine(message, from);
+                session.printLine(message, { sender: from });
             else
-                session.printLine(message, user.nick, user.color);
+                session.printLine(message, { sender: user.nick, color: user.color });
     });
 
     client.addListener('pm', function (nick, text, message) {
         var session = rircClient.getSession(nick);
         if(!!session)
-            session.printLine(text, nick);
+            session.printLine(text, { sender: nick });
     });
 
     client.addListener('error', function(message) {
@@ -210,8 +244,9 @@ RircClient.prototype.addListeners = function() {
         session.users   = [];
 
         $.each(nicks, function(nick, perm) {
-            formatted += nick + " ";
-            session.users.push(new user.User(nick, perm, session.colors.next()));
+            var color = session.colors.next()
+            formatted += '<span class="' + color + '">' + nick + '</span> ';
+            session.users.push(new user.User(nick, perm, color));
         });
 
         session.users.sort(function(a, b) {
@@ -242,7 +277,7 @@ RircClient.prototype.addListeners = function() {
         });
 
         if(!!session)
-            session.printLine(formatted);
+            session.printLine(formatted, { escape: false });
     });
 
     client.addListener('registered', function(message) {
@@ -251,9 +286,9 @@ RircClient.prototype.addListeners = function() {
         var session = rircClient.getSession(rircClient.ip);
         if(!!session) {
             session.printLine('Connected to ' + message.server + ' as ' + rircClient.nickname);
-            session.printLine(message.args[1], message.prefix);
+            session.printLine(message.args[1], { sender: message.prefix });
         }
-        global.updateStatus("Connected to " + message.server, 3);
+        clientWindow.updateStatus("Connected to " + message.server, 3);
     });
 
     client.addListener('motd', function(motd) {
@@ -266,7 +301,7 @@ RircClient.prototype.addListeners = function() {
         var time = new Date(message.args[3] * 1000);
         var session = rircClient.getSession(channel);
         if(!!session)
-            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, message.prefix);
+            session.printLine('Topic set by ' + message.args[2] + ' on ' + time.toTimeString() + ' - ' + topic, { sender: message.prefix });
     });
 
     client.addListener('join', function(channel, nick, message) {
@@ -330,6 +365,8 @@ Rirc.prototype.loadNetworks = function() {
     $.each(global.settings.networks, function(key, network) {
         var nickname    = global.settings.nickname;
         var client      = new irc.Client(network.ip, nickname, {
+            userName: nickname,
+            realName: nickname,
             channels: network.channels,
         });
         var rircClient  = new RircClient(client, nickname, network.ip);
@@ -355,15 +392,8 @@ Rirc.prototype.setActiveClient = function(ip) {
 var rirc = new Rirc();
 rirc.loadNetworks();
 
-window.onfocus = function() {
-    //global.updateStatus("focus", 1);
-}
+$(document).ready(function() {
 
-window.onblur = function() {
-    //global.updateStatus("blur", 1);;
-}
-
-$(function(){
     $(document).on('click', 'a.channel', function() {
         var id = $(this).attr('href').split('|');
 
@@ -372,27 +402,12 @@ $(function(){
         session.drawSession();
         return false;
     });
-});
 
-//var menu = new gui.Menu();
-//menu.append(new gui.MenuItem({ label: 'Item A' }));
-//menu.append(new gui.MenuItem({ label: 'Item B' }));
-//menu.append(new gui.MenuItem({ type: 'separator' }));
-//menu.append(new gui.MenuItem({ label: 'Item C' }));
-
-
-//for (var i = 0; i < menu.items.length; ++i) {
-//  console.log(menu.items[i]);
-//}
-
-window.onload = function() {
-
-    $("#fileMenu").click(function(event) {
-        event.preventDefault();
-        var y = $(this).offset().top + $(this).outerHeight(true);
-        var x = $(this).offset().left;
-        menu.popup(x, y);
+    $(document).on('click', 'a.link', function() {
+        global.gui.Shell.openExternal($(this).attr("href"));
+        return false;
     });
+
 
     $("#minimize").click(function() {
         global.mainWindow.minimize();
@@ -404,15 +419,7 @@ window.onload = function() {
     });
 
     $("a").click(function(event) {
-        //event.preventDefault();
-    });
-
-    $("a").click(function(event) {
-        //console.log(event);
-    });
-
-    $("a.link").click(function(event) {
-        //$("#window").load($(this).attr("href"));
+        event.preventDefault();
     });
 
     $("input").keydown(function(event) {
@@ -422,82 +429,36 @@ window.onload = function() {
 
             var client = rirc.getActiveClient();
             var session = client.getActiveSession();
-            session.printLine(message, client.nickname);
+            session.printLine(message, { sender: client.nickname, color: "irc-yellow" });
             client.client.say(session.channel, message);
             $(this).val("");
         }
     });
 
-    var dragging = [];
-    $('#channels .dragbar').mousedown(function(e) {
-        e.preventDefault();
-        dragging['channels'] = true;
-        var channels = $('#channels .dragbar');
-        var ghostbar = $('<div>', { id:'ghostbar', css: { height: channels.outerHeight(), top: channels.offset().top, left: channels.offset().left }}).appendTo('body');
-
-        $(document).mousemove(function(e){
-            var left = e.pageX;
-            if(left < parseInt($("#channels").css("min-width"))) {
-               left = parseInt($("#channels").css("min-width"));
-            }
-            ghostbar.css("left",left);
-        });
+    $(document).keypress(function(event) {
+        if(event.ctrlKey) return;
+        $("#chatbox").focus();
     });
 
-    $('#userlist .dragbar').mousedown(function(e) {
-        e.preventDefault();
-        dragging['userlist'] = true;
-        var userlist = $('#userlist .dragbar');
-        var ghostbar = $('<div>', { id:'ghostbar', css: { height: userlist.outerHeight(), top: userlist.offset().top, left: userlist.offset().left }}).appendTo('body');
-
-        $(document).mousemove(function(e){
-            var left = e.pageX + 5;
-            var maxwidth = window.innerWidth - parseInt($("#userlist").css("min-width"))
-            if(left > maxwidth) {
-               left = window.innerWidth - parseInt($("#userlist").css("min-width"));
-            }
-            ghostbar.css("left",left);
-        });
-    });
-
-    $(document).mouseup(function(e){
-        if (dragging['channels']) {
-            resizePanes('channels', $("#ghostbar").offset().left);
-            $('#ghostbar').remove();
-            $(document).unbind('mousemove');
-            dragging['channels'] = false;
-        } else if(dragging['userlist']) {
-            resizePanes('userlist', window.innerWidth - $("#ghostbar").offset().left);
-            $('#ghostbar').remove();
-            $(document).unbind('mousemove');
-            dragging['userlist'] = false;
+    $(".rirc").layout({
+        applyDefaultStyles: false,
+        resizerClass: "dragbar",
+        resizeWhileDragging: true,
+        closable: false,
+        west: {
+            minSize: 110,
+            maxSize: "45%",
+            //size: //From config
+        },
+        east: {
+            minSize: 110,
+            maxSize: "45%",
+            //size: //From config
         }
     });
+    
+});
 
-    function resizePanes(relativeTo, newWidth) {
-        newWidth = getPercentage(newWidth);
-        var totalWidth;
-        switch(relativeTo) {
-            case 'channels':
-                $('#channels').css("width", newWidth + "%");
-                totalWidth = newWidth + getPercentage($("#userlist").width());
-                break;
-            case 'userlist':
-                $('#userlist').css("width", newWidth + "%");
-                totalWidth = newWidth + getPercentage($("#channels").width());
-                break;
-        }
-        var chatWidth = 100 - totalWidth;
-        $('#chat').css("width", chatWidth + "%");
-    }
-
-    function getPercentage(width) {
-        return width / ( window.innerWidth / 100 );
-    }
-
+window.onload = function() {
     global.mainWindow.show();
 }
-
-process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
-});

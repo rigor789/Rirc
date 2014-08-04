@@ -17,28 +17,20 @@
  */
 
 'use strict';
-exports.Colors = function() {
-    this.colors  = [
-        'irc-dark-blue',
-        'irc-dark-green',
-        'irc-dark-red',
-        'irc-magenta',
-        'irc-magenta',
-        'irc-yellow',
-        'irc-cyan',
-        'irc-light-red',
-        'irc-light-green',
-        'irc-light-cyan',
-        'irc-light-blue',
-        'irc-light-magenta',
-    ];
-    this.current = -1;
+var $               = global.jQuery;
+
+/**
+ * Update client status in the statusbar
+ */
+var updateStatus = function(status, duration) {
+    $("#status").html(status);
+    if(duration === undefined) {
+        return;
+    }
+    setTimeout(
+        function() {
+            $("#status").html('Idle');
+        }, duration * 1000);
 }
 
-exports.Colors.prototype.next = function() {
-    this.current++;
-    if(this.current == this.colors.length) {
-        this.current = 0;
-    }
-    return this.colors[this.current];
-};
+module.exports.updateStatus = updateStatus;

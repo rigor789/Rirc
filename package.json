@@ -30,7 +30,7 @@
     "main": "index.html",
     "window": {
         "show": false,
-        "toolbar": false,
+        "toolbar": true,
         "frame": false,
         "position": "center",
         "icon": "icon.png",
@@ -38,5 +38,10 @@
         "height": 620,
         "min_width": 680,
         "min_height": 620
+    },
+    "devDependencies": {
+        "grunt": "0.4.1",
+        "grunt-contrib-less": "0.11.2",
+        "grunt-contrib-watch" : "0.5.3"
     }
 }
