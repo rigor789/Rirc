@@ -95,24 +95,30 @@ ColorParser.prototype.parse = function(data) {
                     break;
                 // italic
                 case '\x1d':
-                    if(!italic) {
+                    if(italic) {
+                        ++closing_tags;
+                    } else {
                         tag = this.openTag('italic');
-                        italic = true;
                     }
+                    italic = !italic;
                     break;
                 // bold
                 case '\x02':
-                    if(!bold) {
+                    if(bold) {
+                        ++closing_tags;
+                    } else {
                         tag = this.openTag('bold');
-                        bold = true;
                     }
+                    bold = !bold;
                     break;
                 // underline
                 case '\x1f':
-                    if(!underline) {
+                    if(underline) {
+                        ++closing_tags;
+                    } else {
                         tag = this.openTag('underline');
-                        underline = true;
                     }
+                    underline = !underline;
                     break;
                 default:
                     console.warn('How in the world did you get here?!');
