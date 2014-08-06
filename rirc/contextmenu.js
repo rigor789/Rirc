@@ -21,22 +21,25 @@ var gui             = global.gui;
 var $               = global.jQuery;
 var document        = global.document;
 
-function Menu() {
+function ContextMenu() {
     this.menu = new gui.Menu();
 }
 
-Menu.prototype.add = function(label, callback) {
+// Add a menu item with specified label
+ContextMenu.prototype.add = function(label, callback) {
     this.menu.append(new gui.MenuItem({
         click: callback,
         label: label
     }));
 }
 
-Menu.prototype.addSeparator = function(callback) {
+// Add a separator
+ContextMenu.prototype.addSeparator = function() {
     this.menu.append(new gui.MenuItem({ type: 'separator' }));
 }
 
-Menu.prototype.embed = function(element) {
+// Links a menu to a jquery element
+ContextMenu.prototype.embed = function(element) {
     var men = this.menu;
     element.click(function(event) {
         event.preventDefault();
@@ -48,7 +51,7 @@ Menu.prototype.embed = function(element) {
 
 
 // Such test
-var fileMenu = new Menu();
+var fileMenu = new ContextMenu();
 fileMenu.add("Connect", function() {
     console.log("Such connection, woaw!");
 });
@@ -62,13 +65,13 @@ fileMenu.add("Exit", function() {
 });
 fileMenu.embed($("#fileMenu"));
 
-var editMenu = new Menu();
+var editMenu = new ContextMenu();
 editMenu.add("Parameters", function() {
     console.log("Such editing, so parameters");
 });
 editMenu.embed($("#editMenu"));
 
-var helpMenu = new Menu();
+var helpMenu = new ContextMenu();
 helpMenu.add("About", function() {
     console.log("Such editing, so parameters");
 });
