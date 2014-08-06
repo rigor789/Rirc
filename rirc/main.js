@@ -72,7 +72,7 @@ RircSession.prototype.drawSession = function() {
  * printLine will print a line to the session
  */
 RircSession.prototype.printLine = function(message, options) {
-    var defaults    = { 
+    var defaults    = {
         sender: "*",
         color: "initial",
         escape: true,
@@ -82,10 +82,10 @@ RircSession.prototype.printLine = function(message, options) {
     var options     = options || defaults;
     for(var key in defaults) {
         if(options[key] === undefined) {
-            options[key] = defaults[key];   
+            options[key] = defaults[key];
         }
     }
-    
+
     var line = this.drawLine(message, options);
     this.buffer[this.buffer.length] = line;
 }
@@ -456,7 +456,7 @@ $(document).ready(function() {
             //size: //From config
         }
     });
-    
+
 });
 
 window.onload = function() {
