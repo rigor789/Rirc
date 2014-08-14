@@ -21,28 +21,58 @@ var gui             = global.gui;
 var $               = global.jQuery;
 var document        = global.document;
 
-var fileMenu        = new gui.Menu();
-
-fileMenu.append(new gui.MenuItem({ label: 'YOLO' }));
-fileMenu.append(new gui.MenuItem({ label: 'WUT' }));
-fileMenu.append(new gui.MenuItem({ type: 'separator' }));
-fileMenu.append(new gui.MenuItem({ label: 'Exit' }));
-
-for (var i = 0; i < fileMenu.items.length; ++i) {
-    onClick(i);
+function ContextMenu() {
+    this.menu = new gui.Menu();
 }
 
-function onClick(item) {
-    fileMenu.items[item].click = function() { 
-        console.log(fileMenu.items[item].label);
-    };
+// Add a menu item with specified label
+ContextMenu.prototype.add = function(label, callback) {
+    this.menu.append(new gui.MenuItem({
+        click: callback,
+        label: label
+    }));
 }
 
-$(document).ready(function() {
-    $("#fileMenu").click(function(event) {
+// Add a separator
+ContextMenu.prototype.addSeparator = function() {
+    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+}
+
+// Links a menu to a jquery element
+ContextMenu.prototype.embed = function(element) {
+    var men = this.menu;
+    element.click(function(event) {
         event.preventDefault();
-        var y = $(this).offset().top + $(this).outerHeight(true);
-        var x = $(this).offset().left;
-        fileMenu.popup(x, y);
+        var y = element.offset().top + element.outerHeight(true);
+        var x = element.offset().left;
+        men.popup(x, y);
     });
+}
+
+
+// Such test
+var fileMenu = new ContextMenu();
+fileMenu.add("Connect", function() {
+    console.log("Such connection, woaw!");
 });
+fileMenu.add("Disconnect", function() {
+    console.log("So disconnected, woaw!");
+});
+fileMenu.addSeparator();
+fileMenu.add("Exit", function() {
+    global.mainWindow.hide();
+    gui.App.quit();
+});
+fileMenu.embed($("#fileMenu"));
+
+var editMenu = new ContextMenu();
+editMenu.add("Parameters", function() {
+    console.log("Such editing, so parameters");
+});
+editMenu.embed($("#editMenu"));
+
+var helpMenu = new ContextMenu();
+helpMenu.add("About", function() {
+    console.log("Such editing, so parameters");
+});
+helpMenu.embed($("#helpMenu"));
