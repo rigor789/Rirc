@@ -11,6 +11,10 @@
 
 Rirc is an irc client based on `node.js` and `node-webkit`. It runs as a native application.
 
+## Development
+
+Rirc has been abandoned for the most part due to loss in interest. Feel free to fork if interested!
+
 ## Features
 
 * A clean GUI
